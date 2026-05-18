@@ -1,0 +1,403 @@
+import type { Product } from "@/types/product";
+
+const equipmentImage = "/images/products/1dental-product-render.png";
+const accessoryImage = "/images/products/dental-product-render.png";
+
+export const products: Product[] = [
+  {
+    id: "unit-diplomat-model-pro",
+    slug: "diplomat-model-pro-dental-unit",
+    title: "Стоматологическая установка Diplomat Model Pro",
+    categorySlug: "stomatologicheskie-ustanovki",
+    categoryName: "Стоматологические установки",
+    brand: "Diplomat Dental",
+    manufacturer: "Diplomat Dental s.r.o.",
+    price: 1200000,
+    priceLabel: "от 1 200 000 ₽",
+    shortDescription:
+      "Рабочее место врача с эргономичным креслом, светильником и блоком ассистента.",
+    description:
+      "Стоматологическая установка для терапевтического и ортопедического приема. Комплектация подбирается под профиль клиники, количество инструментов и требования к рабочему месту врача.",
+    image: equipmentImage,
+    characteristics: [
+      { name: "Тип подачи", value: "Верхняя или нижняя" },
+      { name: "Количество инструментов", value: "до 5 позиций" },
+      { name: "Светильник", value: "LED" },
+      { name: "Назначение", value: "Терапия и ортопедия" },
+    ],
+  },
+  {
+    id: "unit-medix-comfort",
+    slug: "medix-comfort-dental-unit",
+    title: "Стоматологическая установка MED-IX Comfort",
+    categorySlug: "stomatologicheskie-ustanovki",
+    categoryName: "Стоматологические установки",
+    brand: "MED-IX",
+    manufacturer: "MED-IX Equipment",
+    price: 860000,
+    priceLabel: "от 860 000 ₽",
+    shortDescription:
+      "Универсальная установка для кабинета с ежедневной средней нагрузкой.",
+    description:
+      "Базовая стоматологическая установка с программируемым креслом пациента, гидроблоком, светильником и рабочими позициями врача. Подходит для запуска нового кабинета или обновления оборудования.",
+    image: equipmentImage,
+    characteristics: [
+      { name: "Кресло", value: "Электромеханическое" },
+      { name: "Блок ассистента", value: "Слюноотсос и пылесос" },
+      { name: "Питание", value: "220 В" },
+      { name: "Комплектация", value: "Уточняется при подборе" },
+    ],
+  },
+  {
+    id: "compressor-durr-tornado-2",
+    slug: "durr-tornado-2-compressor",
+    title: "Компрессор DÜRR Dental Tornado 2",
+    categorySlug: "kompressory",
+    categoryName: "Компрессоры",
+    brand: "DÜRR Dental",
+    manufacturer: "Dürr Dental SE",
+    price: 390000,
+    priceLabel: "от 390 000 ₽",
+    shortDescription:
+      "Безмасляный компрессор для стабильной подачи сухого воздуха в клинике.",
+    description:
+      "Компрессорная система DÜRR Dental для стоматологических кабинетов. Рассчитана на чистый медицинский воздух и регулярную работу в ежедневном режиме.",
+    image: equipmentImage,
+    characteristics: [
+      { name: "Тип", value: "Безмасляный" },
+      { name: "Количество рабочих мест", value: "до 2" },
+      { name: "Осушитель", value: "Опционально" },
+      { name: "Бренд", value: "DÜRR Dental" },
+    ],
+  },
+  {
+    id: "compressor-airclean-50",
+    slug: "airclean-50-oil-free-compressor",
+    title: "Безмасляный компрессор AirClean 50",
+    categorySlug: "kompressory",
+    categoryName: "Компрессоры",
+    brand: "AirClean",
+    manufacturer: "AirClean Medical Systems",
+    price: 135000,
+    priceLabel: "135 000 ₽",
+    shortDescription:
+      "Компактный компрессор с ресивером для одного стоматологического кресла.",
+    description:
+      "Безмасляный компрессор с системой подготовки воздуха. Подходит для кабинета с одной установкой и умеренной ежедневной нагрузкой.",
+    image: equipmentImage,
+    characteristics: [
+      { name: "Ресивер", value: "50 л" },
+      { name: "Производительность", value: "120 л/мин" },
+      { name: "Уровень шума", value: "до 58 дБ" },
+      { name: "Тип воздуха", value: "Безмасляный" },
+    ],
+  },
+  {
+    id: "xray-vatech-ezray-air",
+    slug: "vatech-ezray-air-intraoral-xray",
+    title: "Интраоральный рентген Vatech EzRay Air",
+    categorySlug: "rentgen-oborudovanie",
+    categoryName: "Рентген-оборудование",
+    brand: "Vatech",
+    manufacturer: "Vatech Co., Ltd.",
+    price: 265000,
+    priceLabel: "от 265 000 ₽",
+    shortDescription:
+      "Компактный рентген-аппарат для прицельных снимков в кабинете.",
+    description:
+      "Интраоральный рентген-аппарат для цифровой диагностики. Совместимость и комплектация уточняются при подборе оборудования под кабинет.",
+    image: equipmentImage,
+    characteristics: [
+      { name: "Тип", value: "Интраоральный аппарат" },
+      { name: "Монтаж", value: "Настенный" },
+      { name: "Назначение", value: "Прицельные снимки" },
+      { name: "Комплектация", value: "Уточняется менеджером" },
+    ],
+  },
+  {
+    id: "xray-sensor-medix",
+    slug: "medix-digital-xray-sensor",
+    title: "Цифровой визиограф MED-IX Sensor",
+    categorySlug: "rentgen-oborudovanie",
+    categoryName: "Рентген-оборудование",
+    brand: "MED-IX",
+    manufacturer: "MED-IX Equipment",
+    price: null,
+    priceLabel: "Цена уточняется",
+    shortDescription:
+      "Датчик для цифровых снимков с подключением к рабочему месту врача.",
+    description:
+      "Цифровой визиограф для стоматологической диагностики. Размер датчика, программное обеспечение и совместимость подбираются под задачу клиники.",
+    image: accessoryImage,
+    characteristics: [
+      { name: "Тип", value: "Цифровой датчик" },
+      { name: "Назначение", value: "Рентген-диагностика" },
+      { name: "Подключение", value: "По комплектации" },
+      { name: "Цена", value: "Уточняется" },
+    ],
+  },
+  {
+    id: "handpiece-nsk-ti-max",
+    slug: "nsk-ti-max-turbine-handpiece",
+    title: "Турбинный наконечник NSK Ti-Max",
+    categorySlug: "nakonechniki-i-motory",
+    categoryName: "Наконечники и моторы",
+    brand: "NSK",
+    manufacturer: "NSK Nakanishi Inc.",
+    price: 35000,
+    priceLabel: "35 000 ₽",
+    shortDescription:
+      "Турбинный наконечник с кнопочным зажимом и стабильным охлаждением.",
+    description:
+      "Наконечник для ежедневной терапевтической и ортопедической работы. Конкретная модель и совместимость уточняются при подборе.",
+    image: accessoryImage,
+    characteristics: [
+      { name: "Тип", value: "Турбинный" },
+      { name: "Зажим", value: "Кнопочный" },
+      { name: "Спрей", value: "4-точечный" },
+      { name: "Стерилизация", value: "до 135 °C" },
+    ],
+  },
+  {
+    id: "micromotor-woodpecker",
+    slug: "woodpecker-electric-micromotor",
+    title: "Электрический микромотор Woodpecker",
+    categorySlug: "nakonechniki-i-motory",
+    categoryName: "Наконечники и моторы",
+    brand: "Woodpecker",
+    manufacturer: "Guilin Woodpecker Medical Instrument Co., Ltd.",
+    price: 62000,
+    priceLabel: "от 62 000 ₽",
+    shortDescription:
+      "Микромотор для точной работы с совместимыми угловыми наконечниками.",
+    description:
+      "Электрический микромотор для стоматологической практики. Комплект поставки и совместимость с наконечниками уточняются перед заказом.",
+    image: accessoryImage,
+    characteristics: [
+      { name: "Тип", value: "Электрический микромотор" },
+      { name: "Назначение", value: "Работа с наконечниками" },
+      { name: "Комплект", value: "Уточняется" },
+      { name: "Совместимость", value: "По модели" },
+    ],
+  },
+  {
+    id: "autoclave-melag-vacuklav",
+    slug: "melag-vacuklav-23b-autoclave",
+    title: "Автоклав MELAG Vacuklav 23 B+",
+    categorySlug: "sterilizatsiya-i-dezinfektsiya",
+    categoryName: "Стерилизация и дезинфекция",
+    brand: "MELAG",
+    manufacturer: "MELAG Medizintechnik GmbH",
+    price: 540000,
+    priceLabel: "от 540 000 ₽",
+    shortDescription:
+      "Паровой стерилизатор класса B для инструментов в упаковке и без упаковки.",
+    description:
+      "Автоклав для стерилизационной зоны стоматологической клиники. Поддерживает программы для разных типов загрузки и документацию циклов стерилизации.",
+    image: equipmentImage,
+    characteristics: [
+      { name: "Класс", value: "B" },
+      { name: "Камера", value: "23 л" },
+      { name: "Сушка", value: "Вакуумная" },
+      { name: "Документация", value: "Поддерживается" },
+    ],
+  },
+  {
+    id: "disinfectant-durr-fd-322",
+    slug: "durr-fd-322-surface-disinfectant",
+    title: "Дезинфицирующее средство DÜRR Dental FD 322",
+    categorySlug: "sterilizatsiya-i-dezinfektsiya",
+    categoryName: "Стерилизация и дезинфекция",
+    brand: "DÜRR Dental",
+    manufacturer: "Dürr Dental SE",
+    price: 4200,
+    priceLabel: "4 200 ₽",
+    shortDescription:
+      "Средство для быстрой обработки поверхностей в стоматологическом кабинете.",
+    description:
+      "Дезинфицирующее средство для обработки рабочих поверхностей и медицинского оборудования. Формат поставки и объем уточняются при заказе.",
+    image: accessoryImage,
+    characteristics: [
+      { name: "Форма", value: "Готовый раствор" },
+      { name: "Назначение", value: "Поверхности" },
+      { name: "Объем", value: "2,5 л" },
+      { name: "Бренд", value: "DÜRR Dental" },
+    ],
+  },
+  {
+    id: "furniture-assistant-cabinet",
+    slug: "mobile-assistant-cabinet",
+    title: "Мобильная тумба ассистента",
+    categorySlug: "mebel",
+    categoryName: "Мебель",
+    brand: "MediCab",
+    manufacturer: "MediCab Furniture",
+    price: 52000,
+    priceLabel: "от 52 000 ₽",
+    shortDescription:
+      "Передвижная медицинская тумба для инструментов и расходных материалов.",
+    description:
+      "Тумба на колесных опорах с ящиками и влагостойкой столешницей. Поверхности рассчитаны на регулярную обработку дезинфицирующими средствами.",
+    image: equipmentImage,
+    characteristics: [
+      { name: "Количество ящиков", value: "4" },
+      { name: "Материал", value: "Металл с покрытием" },
+      { name: "Опоры", value: "Колесные с фиксацией" },
+      { name: "Цвет", value: "По каталогу производителя" },
+    ],
+  },
+  {
+    id: "consumable-suction-tips",
+    slug: "disposable-suction-tips-100-pack",
+    title: "Наконечники для аспирации, 100 шт.",
+    categorySlug: "raskhodnye-materialy",
+    categoryName: "Расходные материалы",
+    brand: "MedComfort",
+    manufacturer: "MedComfort Supplies",
+    price: 950,
+    priceLabel: "950 ₽",
+    shortDescription:
+      "Одноразовые аспирационные наконечники для ежедневного приема.",
+    description:
+      "Упаковка одноразовых наконечников для слюноотсоса. Совместимость со стандартными аспирационными системами уточняется при подборе.",
+    image: accessoryImage,
+    characteristics: [
+      { name: "Количество", value: "100 шт." },
+      { name: "Тип", value: "Одноразовые" },
+      { name: "Материал", value: "Пластик" },
+      { name: "Совместимость", value: "Стандартные системы" },
+    ],
+  },
+  {
+    id: "consumable-barrier-film",
+    slug: "dental-barrier-film-roll",
+    title: "Барьерная пленка для стоматологического кабинета",
+    categorySlug: "raskhodnye-materialy",
+    categoryName: "Расходные материалы",
+    brand: "MedComfort",
+    manufacturer: "MedComfort Supplies",
+    price: 1800,
+    priceLabel: "1 800 ₽",
+    shortDescription:
+      "Пленка для защиты контактных поверхностей в рабочей зоне врача.",
+    description:
+      "Расходный материал для регулярной работы стоматологического кабинета. Формат рулона и количество листов уточняются при заказе.",
+    image: accessoryImage,
+    characteristics: [
+      { name: "Тип", value: "Барьерная защита" },
+      { name: "Формат", value: "Рулон" },
+      { name: "Назначение", value: "Поверхности и рукоятки" },
+      { name: "Поставка", value: "Упаковками" },
+    ],
+  },
+  {
+    id: "spare-unit-water-valve",
+    slug: "dental-unit-water-valve-spare-part",
+    title: "Клапан воды для стоматологической установки",
+    categorySlug: "zapchasti-dlya-oborudovaniya",
+    categoryName: "Запчасти для оборудования",
+    brand: "MED-IX Parts",
+    manufacturer: "MED-IX Equipment",
+    price: 4600,
+    priceLabel: "4 600 ₽",
+    shortDescription:
+      "Электромагнитный клапан для замены в гидроблоке стоматологической установки.",
+    description:
+      "Запасная часть для обслуживания установки. Перед заказом совместимость уточняется по модели оборудования.",
+    image: accessoryImage,
+    characteristics: [
+      { name: "Тип", value: "Электромагнитный клапан" },
+      { name: "Напряжение", value: "24 В" },
+      { name: "Назначение", value: "Подача воды" },
+      { name: "Совместимость", value: "Уточняется по модели" },
+    ],
+  },
+  {
+    id: "spare-compressor-filter-kit",
+    slug: "compressor-filter-service-kit",
+    title: "Комплект фильтров для компрессора",
+    categorySlug: "zapchasti-dlya-oborudovaniya",
+    categoryName: "Запчасти для оборудования",
+    brand: "AirClean",
+    manufacturer: "AirClean Medical Systems",
+    price: 7900,
+    priceLabel: "7 900 ₽",
+    shortDescription:
+      "Комплект фильтров для планового обслуживания компрессорной системы.",
+    description:
+      "Комплект расходных элементов для поддержания стабильной работы компрессора. Подбор выполняется по модели оборудования.",
+    image: accessoryImage,
+    characteristics: [
+      { name: "Состав", value: "Воздушные фильтры" },
+      { name: "Назначение", value: "Плановое обслуживание" },
+      { name: "Совместимость", value: "По модели компрессора" },
+      { name: "Периодичность", value: "По регламенту производителя" },
+    ],
+  },
+  {
+    id: "spare-handpiece-cartridge",
+    slug: "turbine-handpiece-cartridge",
+    title: "Картридж для турбинного наконечника",
+    categorySlug: "zapchasti-dlya-oborudovaniya",
+    categoryName: "Запчасти для оборудования",
+    brand: "NSK",
+    manufacturer: "NSK Nakanishi Inc.",
+    price: null,
+    priceLabel: "Цена уточняется",
+    shortDescription:
+      "Роторная группа для замены в совместимом турбинном наконечнике.",
+    description:
+      "Запасная часть для восстановления работы турбинного наконечника. Совместимость и итоговая стоимость уточняются по модели.",
+    image: accessoryImage,
+    characteristics: [
+      { name: "Тип", value: "Картридж" },
+      { name: "Назначение", value: "Турбинный наконечник" },
+      { name: "Совместимость", value: "По модели" },
+      { name: "Цена", value: "Уточняется" },
+    ],
+  },
+  {
+    id: "lab-equipment-renfert-trimmer",
+    slug: "renfert-model-trimmer",
+    title: "Зуботехнический триммер Renfert",
+    categorySlug: "zubotekhnicheskoe-oborudovanie",
+    categoryName: "Зуботехническое оборудование",
+    brand: "Renfert",
+    manufacturer: "Renfert GmbH",
+    price: 148000,
+    priceLabel: "от 148 000 ₽",
+    shortDescription:
+      "Оборудование для обработки гипсовых моделей в зуботехнической лаборатории.",
+    description:
+      "Триммер для точной обработки моделей. Подходит для зуботехнических лабораторий с регулярной нагрузкой и требованиями к аккуратной обработке.",
+    image: equipmentImage,
+    characteristics: [
+      { name: "Назначение", value: "Обработка моделей" },
+      { name: "Тип", value: "Мокрый триммер" },
+      { name: "Применение", value: "Лаборатория" },
+      { name: "Производитель", value: "Renfert GmbH" },
+    ],
+  },
+  {
+    id: "lab-material-ceramic-kit",
+    slug: "dental-lab-ceramic-material-kit",
+    title: "Набор керамических материалов для лаборатории",
+    categorySlug: "zubotekhnicheskoe-oborudovanie",
+    categoryName: "Зуботехническое оборудование",
+    brand: "LabCeram",
+    manufacturer: "LabCeram Materials",
+    price: null,
+    priceLabel: "Цена уточняется",
+    shortDescription:
+      "Материалы для изготовления и коррекции зуботехнических конструкций.",
+    description:
+      "Комплект материалов для лабораторных работ. Состав набора и итоговая стоимость подбираются под задачи лаборатории.",
+    image: accessoryImage,
+    characteristics: [
+      { name: "Назначение", value: "Зуботехнические работы" },
+      { name: "Формат", value: "Набор" },
+      { name: "Подбор", value: "По задачам лаборатории" },
+      { name: "Цена", value: "Уточняется" },
+    ],
+  },
+];
