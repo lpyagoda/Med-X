@@ -1,7 +1,7 @@
-"use client";
-
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useState } from "react";
+import { QuickOrderModal } from "@/components/product/QuickOrderModal";
+import { useCart } from "@/contexts/CartContext";
 import type { Product } from "@/types/product";
 
 type ProductOrderPanelProps = {
@@ -10,6 +10,10 @@ type ProductOrderPanelProps = {
 
 export function ProductOrderPanel({ product }: ProductOrderPanelProps) {
   const [quantity, setQuantity] = useState(1);
+  const [quickOpen, setQuickOpen] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const { add, open: openCart } = useCart();
+
   const availability = product.availability ?? "on-order";
   const availabilityLabel =
     product.availabilityLabel ?? (availability === "in-stock" ? "В наличии" : "Под заказ");
@@ -22,6 +26,23 @@ export function ProductOrderPanel({ product }: ProductOrderPanelProps) {
   const increaseQuantity = () => {
     setQuantity((currentQuantity) => currentQuantity + 1);
   };
+
+  function handleAddToCart() {
+    add(
+      {
+        productId: product.id,
+        slug: product.slug,
+        title: product.title,
+        image: product.image,
+        priceLabel: product.priceLabel,
+        unitPrice: product.price,
+      },
+      quantity,
+    );
+    setAddedToCart(true);
+    window.setTimeout(() => setAddedToCart(false), 1800);
+    openCart();
+  }
 
   return (
     <div className="flex h-full flex-col gap-6 lg:sticky lg:top-28">
@@ -88,18 +109,27 @@ export function ProductOrderPanel({ product }: ProductOrderPanelProps) {
 
           <button
             className="h-12 rounded-full bg-primary px-6 text-sm font-semibold text-white shadow-[0_18px_38px_rgba(7,55,99,0.18)] transition hover:-translate-y-0.5 hover:bg-primary-hover hover:shadow-[0_22px_44px_rgba(7,55,99,0.22)]"
+            onClick={handleAddToCart}
             type="button"
           >
-            Купить
+            {addedToCart ? "Добавлено в корзину" : "В корзину"}
           </button>
         </div>
 
         <button
           className="mt-3 h-12 w-full rounded-full border border-primary/35 bg-white/70 px-6 text-sm font-semibold text-primary transition hover:-translate-y-0.5 hover:border-primary/55 hover:bg-white"
+          onClick={() => setQuickOpen(true)}
           type="button"
         >
           Купить в 1 клик
         </button>
+
+        <Link
+          className="mt-3 inline-flex h-10 w-full items-center justify-center rounded-full text-sm font-semibold text-primary transition hover:bg-card-soft"
+          to="/cart"
+        >
+          Перейти в корзину →
+        </Link>
 
         <p className="mt-5 text-sm leading-6 text-muted">
           Итоговую стоимость, наличие, сроки поставки и доставку подтвердит
@@ -149,11 +179,18 @@ export function ProductOrderPanel({ product }: ProductOrderPanelProps) {
         <div className="my-5 h-px bg-border" />
         <Link
           className="inline-flex min-h-10 items-center justify-center rounded-full px-5 text-sm font-semibold text-foreground transition hover:bg-card-soft hover:text-primary"
-          href="/contacts"
-          >
+          to="/contacts"
+        >
           Связаться с менеджером
         </Link>
       </section>
+
+      <QuickOrderModal
+        onClose={() => setQuickOpen(false)}
+        open={quickOpen}
+        product={product}
+        quantity={quantity}
+      />
     </div>
   );
 }

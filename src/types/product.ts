@@ -5,6 +5,11 @@ export type ProductCharacteristic = {
 
 export type ProductAvailability = "in-stock" | "on-order";
 
+export type ProductImage = {
+  url: string;
+  isMain: boolean;
+};
+
 export type Product = {
   availability?: ProductAvailability;
   availabilityLabel?: string;
@@ -15,6 +20,7 @@ export type Product = {
   description: string;
   id: string;
   image: string;
+  images?: ProductImage[];
   manufacturer: string;
   price: number | null;
   priceLabel: string;

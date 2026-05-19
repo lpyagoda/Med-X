@@ -1,11 +1,10 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
+import { PrivacyConsent } from "@/components/legal/PrivacyConsent";
 import { submitConsultationForm } from "@/lib/api";
 import {
   consultationFormSchema,
@@ -15,6 +14,7 @@ import type { ConsultationFormData } from "@/types/forms";
 
 export function ConsultationForm({ submitLabel = "Оставить заявку" }: { submitLabel?: string }) {
   const [isSuccess, setIsSuccess] = useState(false);
+  const [agreed, setAgreed] = useState(false);
   const {
     formState: { errors, isSubmitting },
     handleSubmit,
@@ -81,7 +81,13 @@ export function ConsultationForm({ submitLabel = "Оставить заявку"
         {...register("comment")}
       />
 
-      <Button className="mt-2 w-full sm:w-fit" disabled={isSubmitting} type="submit">
+      <PrivacyConsent checked={agreed} onChange={setAgreed} />
+
+      <Button
+        className="mt-2 w-full sm:w-fit"
+        disabled={isSubmitting || !agreed}
+        type="submit"
+      >
         {isSubmitting ? "Отправляем..." : submitLabel}
       </Button>
     </form>

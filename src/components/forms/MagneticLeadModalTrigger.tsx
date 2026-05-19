@@ -1,5 +1,3 @@
-"use client";
-
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { useLeadModal } from "@/contexts/LeadModalContext";
 import type { ReactNode } from "react";

@@ -1,36 +1,25 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Med-X
 
-## Getting Started
+B2B-каталог стоматологического оборудования, запчастей и расходных материалов.
 
-First, run the development server:
+## Stack
+Vite 7 · React 19 · TypeScript 5 · Tailwind v4 · react-router-dom 7 · react-hook-form + zod 4
 
+## Scripts
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install         # install deps (once)
+npm run dev         # dev server on http://localhost:5173
+npm run build       # type-check + production build into dist/
+npm run preview     # serve dist/ on http://localhost:4173
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Layout
+- `src/pages/` — route components
+- `src/components/` — UI building blocks
+- `src/data/` — static catalogue data (moves to Supabase in Phase 2)
+- `src/styles/globals.css` — Tailwind v4 tokens & custom classes
+- `obsidian/` — project knowledge base (architecture, decisions, changelog) — **read before non-trivial edits**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+Production runs on `188.225.86.146:3030`. See `obsidian/architecture/deployment.md`.

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -12,8 +12,9 @@ type ButtonBaseProps = {
   variant?: ButtonVariant;
 };
 
-type ButtonLinkProps = ButtonBaseProps &
-  Omit<ComponentPropsWithoutRef<typeof Link>, keyof ButtonBaseProps | "className">;
+type ButtonLinkProps = ButtonBaseProps & {
+  href: string;
+} & Omit<ComponentPropsWithoutRef<"a">, keyof ButtonBaseProps | "href">;
 
 type ButtonNativeProps = ButtonBaseProps &
   Omit<ComponentPropsWithoutRef<"button">, keyof ButtonBaseProps | "className"> & {
@@ -24,7 +25,7 @@ export type ButtonProps = ButtonLinkProps | ButtonNativeProps;
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "bg-primary !text-white shadow-[0_18px_38px_rgba(7,55,99,0.18)] hover:-translate-y-0.5 hover:bg-primary-hover hover:!text-white hover:shadow-[0_22px_44px_rgba(7,55,99,0.22)]",
+    "bg-primary text-white! shadow-[0_18px_38px_rgba(7,55,99,0.18)] hover:-translate-y-0.5 hover:bg-primary-hover hover:text-white! hover:shadow-[0_22px_44px_rgba(7,55,99,0.22)]",
   secondary:
     "border border-white/70 bg-white text-primary shadow-[0_16px_32px_rgba(7,55,99,0.12)] hover:-translate-y-0.5 hover:bg-card-soft",
   outline:
@@ -37,6 +38,16 @@ const sizeClasses: Record<ButtonSize, string> = {
   md: "min-h-11 px-5 text-sm",
   lg: "min-h-12 px-7 text-base",
 };
+
+function isExternalHref(href: string) {
+  return (
+    href.startsWith("http://") ||
+    href.startsWith("https://") ||
+    href.startsWith("tel:") ||
+    href.startsWith("mailto:") ||
+    href.startsWith("#")
+  );
+}
 
 export function buttonVariants({
   className,
@@ -60,8 +71,16 @@ export function Button(props: ButtonProps) {
   const classes = buttonVariants({ className, size, variant });
 
   if ("href" in restProps && restProps.href !== undefined) {
+    const { href, ...rest } = restProps;
+    if (isExternalHref(href)) {
+      return (
+        <a className={classes} href={href} {...rest}>
+          {children}
+        </a>
+      );
+    }
     return (
-      <Link className={classes} {...restProps}>
+      <Link className={classes} to={href} {...rest}>
         {children}
       </Link>
     );

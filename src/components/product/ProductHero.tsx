@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { ProductGallery } from "@/components/product/ProductGallery";
 import { ProductOrderPanel } from "@/components/product/ProductOrderPanel";
 import type { Product } from "@/types/product";
 
@@ -11,18 +11,11 @@ export function ProductHero({ product }: ProductHeroProps) {
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-stretch">
       <div className="h-full overflow-hidden rounded-[34px] border border-border/70 bg-white/82 shadow-[0_26px_80px_rgba(7,55,99,0.08)] backdrop-blur">
         <div className="grid h-full gap-8 p-6 sm:p-8 xl:grid-cols-[0.9fr_1.1fr] xl:items-center">
-          <div className="flex min-h-[340px] items-center justify-center rounded-[28px] bg-[linear-gradient(145deg,#f8fcff,#eef7fb)] p-8 sm:min-h-[460px]">
-            <div className="relative h-72 w-full max-w-lg sm:h-96">
-              <Image
-                alt={product.title}
-                className="object-contain"
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 45vw"
-                src={product.image}
-              />
-            </div>
-          </div>
+          <ProductGallery
+            alt={product.title}
+            fallbackImage={product.image}
+            images={product.images ?? []}
+          />
 
           <div>
             <p className="text-sm font-semibold text-primary">

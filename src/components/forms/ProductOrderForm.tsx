@@ -1,10 +1,9 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { PrivacyConsent } from "@/components/legal/PrivacyConsent";
 import { submitProductOrder } from "@/lib/api";
 import {
   productOrderFormSchema,
@@ -19,6 +18,7 @@ type ProductOrderFormProps = {
 
 export function ProductOrderForm({ productId, productTitle }: ProductOrderFormProps) {
   const [isSuccess, setIsSuccess] = useState(false);
+  const [agreed, setAgreed] = useState(false);
   const {
     formState: { errors, isSubmitting },
     handleSubmit,
@@ -87,7 +87,9 @@ export function ProductOrderForm({ productId, productTitle }: ProductOrderFormPr
         {...register("phone")}
       />
 
-      <Button className="w-full" disabled={isSubmitting} type="submit">
+      <PrivacyConsent checked={agreed} onChange={setAgreed} />
+
+      <Button className="w-full" disabled={isSubmitting || !agreed} type="submit">
         {isSubmitting ? "Отправляем..." : "Отправить заявку"}
       </Button>
     </form>

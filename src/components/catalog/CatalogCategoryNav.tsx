@@ -1,4 +1,6 @@
-import Link from "next/link";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Category } from "@/types/category";
 
@@ -13,63 +15,100 @@ function getSubcategoryHref(categorySlug: string, subcategorySlug: string) {
   return `/catalog/${categorySlug}?subcategory=${subcategorySlug}`;
 }
 
+type CategoryGroupProps = {
+  category: Category;
+  isActiveCategory: boolean;
+  activeSubcategorySlug?: string;
+  defaultExpanded: boolean;
+};
+
+function CategoryGroup({
+  category,
+  isActiveCategory,
+  activeSubcategorySlug,
+  defaultExpanded,
+}: CategoryGroupProps) {
+  const [expanded, setExpanded] = useState(defaultExpanded);
+  const hasSubcategories = !!category.subcategories && category.subcategories.length > 0;
+
+  return (
+    <li className="border-b border-border/40 last:border-b-0">
+      <button
+        aria-expanded={hasSubcategories ? expanded : undefined}
+        className={cn(
+          "flex w-full items-center gap-2 px-2 py-2.5 text-left text-sm font-semibold transition-colors hover:text-primary",
+          isActiveCategory ? "text-primary" : "text-foreground",
+        )}
+        onClick={() => {
+          if (hasSubcategories) setExpanded((current) => !current);
+        }}
+        type="button"
+      >
+        <span className="min-w-0 flex-1 truncate">{category.title}</span>
+        {hasSubcategories ? (
+          <ChevronDown
+            aria-hidden="true"
+            className={cn(
+              "h-4 w-4 shrink-0 text-muted transition-transform",
+              expanded ? "rotate-180 text-primary" : "rotate-0",
+            )}
+          />
+        ) : null}
+      </button>
+
+      {hasSubcategories && expanded ? (
+        <div className="pb-2 pl-2 pr-1">
+          <Link
+            className="mb-1 flex items-center justify-between gap-2 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-white! shadow-[0_8px_18px_rgba(7,55,99,0.18)] transition-colors hover:bg-primary-hover"
+            to={`/catalog/${category.slug}`}
+          >
+            <span className="truncate">Все в «{category.title}»</span>
+            <span aria-hidden="true">→</span>
+          </Link>
+          {category.subcategories!.map((subcategory) => {
+            const isActiveSubcategory =
+              isActiveCategory && subcategory.slug === activeSubcategorySlug;
+            return (
+              <Link
+                className={cn(
+                  "block rounded-lg px-2 py-1.5 text-sm leading-5 transition-colors hover:bg-card-soft hover:text-primary",
+                  isActiveSubcategory
+                    ? "bg-card-soft font-semibold text-primary"
+                    : "text-muted",
+                )}
+                to={getSubcategoryHref(category.slug, subcategory.slug)}
+                key={subcategory.id}
+              >
+                {subcategory.title}
+              </Link>
+            );
+          })}
+        </div>
+      ) : null}
+    </li>
+  );
+}
+
 function CategoryLinks({
   activeCategorySlug,
   activeSubcategorySlug,
   categories,
 }: Omit<CatalogCategoryNavProps, "className">) {
   return (
-    <div className="grid gap-3">
+    <ul className="divide-y divide-border/40">
       {categories.map((category) => {
         const isActiveCategory = category.slug === activeCategorySlug;
-
         return (
-          <div
-            className={cn(
-              "rounded-[22px] border bg-card-soft p-3 transition-colors",
-              isActiveCategory
-                ? "border-primary/25 bg-white shadow-[0_16px_34px_rgba(7,55,99,0.07)]"
-                : "border-transparent",
-            )}
+          <CategoryGroup
+            activeSubcategorySlug={activeSubcategorySlug}
+            category={category}
+            defaultExpanded={isActiveCategory}
+            isActiveCategory={isActiveCategory}
             key={category.id}
-          >
-            <Link
-              className={cn(
-                "block rounded-2xl px-3 py-2 text-sm font-semibold transition-colors hover:bg-white hover:text-primary",
-                isActiveCategory ? "text-primary" : "text-foreground",
-              )}
-              href={`/catalog/${category.slug}`}
-            >
-              {category.title}
-            </Link>
-
-            {category.subcategories && category.subcategories.length > 0 ? (
-              <div className="mt-1 grid gap-1">
-                {category.subcategories.map((subcategory) => {
-                  const isActiveSubcategory =
-                    isActiveCategory && subcategory.slug === activeSubcategorySlug;
-
-                  return (
-                    <Link
-                      className={cn(
-                        "rounded-xl px-3 py-2 text-sm leading-5 transition-colors hover:bg-white hover:text-primary",
-                        isActiveSubcategory
-                          ? "border border-[#ccc] bg-[#f5f5f5] font-semibold text-primary"
-                          : "text-muted",
-                      )}
-                      href={getSubcategoryHref(category.slug, subcategory.slug)}
-                      key={subcategory.id}
-                    >
-                      {subcategory.title}
-                    </Link>
-                  );
-                })}
-              </div>
-            ) : null}
-          </div>
+          />
         );
       })}
-    </div>
+    </ul>
   );
 }
 
@@ -87,19 +126,17 @@ export function CatalogCategoryNav({
       )}
     >
       <div className="hidden lg:block">
-        <div className="flex items-center justify-between gap-3 px-2">
+        <div className="flex items-center justify-between gap-3 px-2 pb-3">
           <p className="text-sm font-semibold text-foreground">Категории</p>
-          <Link className="text-sm font-semibold text-primary" href="/catalog">
+          <Link className="text-sm font-semibold text-primary" to="/catalog">
             Все товары
           </Link>
         </div>
-        <div className="mt-4">
-          <CategoryLinks
-            activeCategorySlug={activeCategorySlug}
-            activeSubcategorySlug={activeSubcategorySlug}
-            categories={categories}
-          />
-        </div>
+        <CategoryLinks
+          activeCategorySlug={activeCategorySlug}
+          activeSubcategorySlug={activeSubcategorySlug}
+          categories={categories}
+        />
       </div>
 
       <details className="group lg:hidden">
@@ -109,7 +146,7 @@ export function CatalogCategoryNav({
         </summary>
         <div className="mt-4 max-h-[60vh] overflow-auto pr-1">
           <div className="mb-3 px-2">
-            <Link className="text-sm font-semibold text-primary" href="/catalog">
+            <Link className="text-sm font-semibold text-primary" to="/catalog">
               Все товары
             </Link>
           </div>

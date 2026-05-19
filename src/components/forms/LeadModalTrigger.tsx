@@ -1,5 +1,3 @@
-"use client";
-
 import type { ReactNode } from "react";
 import { buttonVariants } from "@/components/ui/Button";
 import { useLeadModal } from "@/contexts/LeadModalContext";

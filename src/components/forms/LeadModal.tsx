@@ -1,5 +1,3 @@
-"use client";
-
 import { ConsultationForm } from "@/components/forms/ConsultationForm";
 import { Modal } from "@/components/ui/Modal";
 import { useLeadModal } from "@/contexts/LeadModalContext";

@@ -1,7 +1,4 @@
-"use client";
-
-import Image from "next/image";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useCallback, useMemo, useState } from "react";
 import { CategoryTags } from "@/components/catalog/CategoryTags";
 import { PillBadge } from "@/components/ui/PillBadge";
@@ -59,14 +56,14 @@ export function CategoryCard({ category, visual }: CategoryCardProps) {
   return (
     <Link
       className="group relative flex min-h-[390px] overflow-hidden rounded-[30px] border border-white/80 bg-white shadow-[0_20px_54px_rgba(7,55,99,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(7,55,99,0.13)]"
-      href={`/catalog/${category.slug}`}
+      to={`/catalog/${category.slug}`}
     >
       <span
         aria-hidden="true"
         className={cn("absolute inset-0 bg-gradient-to-b", visual.tone)}
       />
 
-      <Image
+      <img
         alt=""
         aria-hidden="true"
         className={cn(
@@ -74,8 +71,9 @@ export function CategoryCard({ category, visual }: CategoryCardProps) {
           visual.imageClassName,
         )}
         height={260}
-        src={visual.image}
+        src={category.image ?? visual.image}
         width={260}
+        loading="lazy"
       />
 
       <span

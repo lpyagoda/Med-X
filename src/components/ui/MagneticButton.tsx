@@ -1,7 +1,5 @@
-"use client";
-
-import Link from "next/link";
-import type { ComponentPropsWithoutRef, CSSProperties, MouseEvent, ReactNode } from "react";
+import { Link } from "react-router-dom";
+import type { CSSProperties, MouseEvent, ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -13,7 +11,7 @@ type MagneticLinkProps = {
   children: ReactNode;
   className?: string;
   variant?: Variant;
-} & Omit<ComponentPropsWithoutRef<typeof Link>, "href" | "children" | "className">;
+};
 
 type MagneticButtonProps = {
   href?: never;
@@ -57,6 +55,16 @@ function useMagnetic() {
   return { faceStyle, onMouseLeave, onMouseMove };
 }
 
+function isExternalHref(href: string) {
+  return (
+    href.startsWith("http://") ||
+    href.startsWith("https://") ||
+    href.startsWith("tel:") ||
+    href.startsWith("mailto:") ||
+    href.startsWith("#")
+  );
+}
+
 export function MagneticButton(props: MagneticProps) {
   const { children, className, variant = "primary" } = props;
   const { faceStyle, onMouseLeave, onMouseMove } = useMagnetic();
@@ -76,15 +84,25 @@ export function MagneticButton(props: MagneticProps) {
   );
 
   if (props.href !== undefined) {
-    const { href, onClick: _onClick, children: _c, className: _cl, variant: _v, ...linkRest } =
-      props as MagneticLinkProps;
+    const { href } = props as MagneticLinkProps;
+    if (isExternalHref(href)) {
+      return (
+        <a
+          className={wrapperClass}
+          href={href}
+          onMouseLeave={onMouseLeave}
+          onMouseMove={onMouseMove}
+        >
+          {face}
+        </a>
+      );
+    }
     return (
       <Link
         className={wrapperClass}
-        href={href}
+        to={href}
         onMouseLeave={onMouseLeave}
         onMouseMove={onMouseMove}
-        {...linkRest}
       >
         {face}
       </Link>

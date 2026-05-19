@@ -1,5 +1,3 @@
-"use client";
-
 import { useMemo, useState } from "react";
 import { CatalogToolbar } from "@/components/catalog/CatalogToolbar";
 import { ProductGrid } from "@/components/catalog/ProductGrid";

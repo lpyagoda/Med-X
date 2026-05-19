@@ -1,6 +1,3 @@
-"use client";
-
-import Image from "next/image";
 import { useEffect, useMemo, useRef } from "react";
 
 type DurrProduct = {
@@ -107,12 +104,11 @@ function DurrProductCard({ index, product }: { index: number; product: DurrProdu
 
       <div className="mt-5 flex h-28 items-center justify-center">
         <div className="relative h-28 w-40">
-          <Image
+          <img
             alt=""
-            className="object-contain"
-            fill
-            sizes="220px"
+            className="absolute inset-0 h-full w-full object-contain"
             src={productPreviewImage}
+            loading="lazy"
           />
         </div>
       </div>

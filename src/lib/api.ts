@@ -1,57 +1,64 @@
 import { categories } from "@/data/categories";
 import { products } from "@/data/products";
 import { matchesProductQuery } from "@/lib/catalogSearch";
+import { createLead } from "@/lib/public/leads";
 import type { Category } from "@/types/category";
 import type { ConsultationFormData, ProductOrderFormData } from "@/types/forms";
 import type { Product } from "@/types/product";
 
-export async function getCategories(): Promise<Category[]> {
+export function getCategories(): Category[] {
   return categories;
 }
 
-export async function getCategoryBySlug(slug: string): Promise<Category | undefined> {
+export function getCategoryBySlug(slug: string): Category | undefined {
   return categories.find((category) => category.slug === slug);
 }
 
-export async function getProducts(): Promise<Product[]> {
+export function getProducts(): Product[] {
   return products;
 }
 
-export async function getProductBySlug(slug: string): Promise<Product | undefined> {
+export function getProductBySlug(slug: string): Product | undefined {
   return products.find((product) => product.slug === slug);
 }
 
-export async function getProductsByCategory(categorySlug: string): Promise<Product[]> {
+export function getProductsByCategory(categorySlug: string): Product[] {
   return products.filter((product) => product.categorySlug === categorySlug);
 }
 
-export async function searchProducts(query: string): Promise<Product[]> {
+export function searchProducts(query: string): Product[] {
   return products.filter((product) => matchesProductQuery(product, query));
 }
 
-export async function searchProductsInCategory(
+export function searchProductsInCategory(
   categorySlug: string,
   query: string,
-): Promise<Product[]> {
-  const categoryProducts = await getProductsByCategory(categorySlug);
-
-  return categoryProducts.filter((product) => matchesProductQuery(product, query));
+): Product[] {
+  return getProductsByCategory(categorySlug).filter((product) =>
+    matchesProductQuery(product, query),
+  );
 }
 
 export async function submitProductOrder(
   data: ProductOrderFormData,
 ): Promise<{ success: true }> {
-  // Позже здесь будет подключение CRM/API и уведомлений в MAX/email.
-  console.log("Product order submitted", data);
-
+  await createLead({
+    name: data.name,
+    phone: data.phone,
+    comment: `Заявка по товару: ${data.productTitle} (id ${data.productId})`,
+    source: "product_order",
+  });
   return { success: true };
 }
 
 export async function submitConsultationForm(
   data: ConsultationFormData,
 ): Promise<{ success: true }> {
-  // Позже здесь будет подключение CRM/API и уведомлений в MAX/email.
-  console.log("Consultation form submitted", data);
-
+  await createLead({
+    name: data.name,
+    phone: data.phone,
+    comment: data.comment,
+    source: "consultation",
+  });
   return { success: true };
 }
