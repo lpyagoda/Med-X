@@ -138,38 +138,12 @@ export function ProductOrderPanel({ product }: ProductOrderPanelProps) {
       </aside>
 
       <section className="rounded-[30px] border border-border/70 bg-white/86 p-6 text-center shadow-[0_24px_70px_rgba(7,55,99,0.08)] backdrop-blur">
-        <svg
+        <img
+          src="/SVG/envelope.svg"
+          alt=""
           aria-hidden="true"
-          className="mx-auto h-12 w-12 text-primary"
-          fill="none"
-          viewBox="0 0 48 48"
-        >
-          <path
-            d="M10 18.5 24 10l14 8.5v19H10v-19Z"
-            stroke="currentColor"
-            strokeLinejoin="round"
-            strokeWidth="1.8"
-          />
-          <path
-            d="m11 19.5 13 11 13-11M10 37l12-10M38 37 26 27"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="1.8"
-          />
-          <path
-            d="M20.5 17.4c.4-2.6 2.2-4.4 5-4.4 2.9 0 4.9 1.9 4.9 4.4 0 2.2-1.1 3.3-3.2 4.5-1.6.9-2.1 1.7-2.1 3.1v.5"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeWidth="1.8"
-          />
-          <path
-            d="M25.1 30.2h.1"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeWidth="2.8"
-          />
-        </svg>
+          className="mx-auto h-12 w-12"
+        />
         <h2 className="mt-4 text-xl font-semibold text-foreground">
           Нужна консультация?
         </h2>

@@ -5,7 +5,13 @@
       "Bash(npx tsc *)",
       "Bash(git init *)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(npm run *)",
+      "Bash(npm install *)",
+      "Bash(npm list *)",
+      "Bash(git push *)",
+      "Bash(grep -E \"^  \\\\{$|^    slug:\" src/data/categories.ts)",
+      "Bash(grep -A1 \"^  {$\")"
     ]
   }
 }
