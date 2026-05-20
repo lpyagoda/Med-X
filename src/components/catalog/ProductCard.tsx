@@ -13,11 +13,6 @@ function getProductDetailsHref(product: Product) {
   return `/product/${product.slug}`;
 }
 
-/**
- * Invisible link that covers the whole card. Lets the user click anywhere
- * on the card to navigate to the product, while keeping inner buttons fully
- * clickable thanks to their own `relative z-10` stacking.
- */
 function CardOverlay({ product }: { product: Product }) {
   return (
     <Link

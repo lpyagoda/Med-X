@@ -44,6 +44,19 @@
   --admin-muted-fg: #64748b;
 }
 
+body {
+  transition: background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.dark-bg {
+  background-color: #073763;
+}
+
+@keyframes progress-fill {
+  from { width: 0% }
+  to { width: 100% }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

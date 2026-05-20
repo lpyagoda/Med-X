@@ -16,8 +16,8 @@ export function Header() {
   return (
     <header className="fixed left-0 right-0 top-0 z-50 px-4 pt-3 md:px-0">
       <div className="container-frame flex min-h-14 items-center justify-between gap-4 rounded-[20px] border border-white/70 bg-white/58 px-4 shadow-[0_16px_44px_rgba(16,24,40,0.12)] backdrop-blur-xl md:px-5 xl:min-h-16 xl:rounded-[24px] xl:px-6 2xl:min-h-[72px] 2xl:rounded-[28px] 2xl:px-7">
-        <Link className="shrink-0 text-lg font-bold text-foreground xl:text-xl" to="/">
-          MED-IX
+        <Link className="shrink-0" to="/">
+          <img src="/SVG/logo.svg" alt="MED-IX" className="h-6 w-auto xl:h-7 2xl:h-8" />
         </Link>
 
         <nav className="hidden md:block" aria-label="Основная навигация">

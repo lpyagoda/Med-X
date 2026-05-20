@@ -26,9 +26,15 @@ export function AboutHero() {
     <Section className="pb-8 pt-24 sm:pt-28 lg:pt-28">
       <Container>
         <div className="relative overflow-hidden rounded-[36px] border border-border/70 bg-[linear-gradient(135deg,#ffffff_0%,#eef9fc_58%,#f8fcff_100%)] p-6 shadow-[0_28px_84px_rgba(7,55,99,0.08)] sm:p-8 lg:p-12">
+          <img
+            src="/images/about-hero-equipment-bg.png"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover object-right opacity-30"
+          />
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_20%,rgba(34,184,207,0.16),transparent_34%),radial-gradient(circle_at_20%_100%,rgba(7,55,99,0.08),transparent_30%)]"
+            className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.97)_0%,rgba(255,255,255,0.85)_45%,rgba(255,255,255,0.1)_100%)]"
           />
 
           <div className="relative">

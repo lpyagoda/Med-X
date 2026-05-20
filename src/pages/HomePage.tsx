@@ -11,6 +11,7 @@ import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { getCategories, getProducts } from "@/lib/api";
 import { fetchPublicCategories } from "@/lib/public/catalogue";
+import { useScrollBackground } from "@/lib/useScrollBackground";
 
 export function HomePage() {
   // First paint: static data (instant). Then hydrate from Supabase so admin-
@@ -18,6 +19,7 @@ export function HomePage() {
   const [categories, setCategories] = useState(() => getCategories());
   const products = getProducts();
   const popularProducts = products.slice(0, 6);
+  const darkSentinelRef = useScrollBackground();
 
   useEffect(() => {
     let cancelled = false;
@@ -69,36 +71,52 @@ export function HomePage() {
         </Container>
       </Section>
 
+      <div ref={darkSentinelRef} aria-hidden="true" />
       <BenefitsSection />
 
-      <Section className="bg-card-soft py-10 sm:py-12 lg:py-16">
+      <Section className="py-14 sm:py-18 lg:py-24">
         <Container>
-          <div className="grid gap-6 lg:grid-cols-2 lg:items-stretch">
-            <div className="flex min-h-[360px] items-center rounded-[28px] border border-white/80 bg-white p-7 shadow-[0_24px_70px_rgba(7,55,99,0.08)] sm:p-10 lg:min-h-[430px] lg:p-14">
-              <div className="max-w-xl">
-                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">
-                  MED-IX
-                </p>
-                <h2 className="mt-4 text-3xl font-semibold leading-[1.08] text-foreground sm:text-4xl">
-                  О компании
-                </h2>
-                <p className="mt-5 text-base leading-7 text-muted sm:text-lg">
-                  Компания занимается продажей стоматологического оборудования,
-                  запасных частей и сопутствующих товаров для клиник, кабинетов и
-                  лабораторий. Сайт помогает быстро показать ассортимент, принять
-                  заявку и передать обращение менеджеру.
-                </p>
-                <Button href="/about" variant="outline" className="mt-7">
-                  Подробнее о компании
-                </Button>
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+            {/* Left: text + stats */}
+            <div className="flex flex-col">
+              <p className="text-sm font-medium text-muted">О компании</p>
+              <h2 className="mt-3 text-4xl font-bold leading-[1.08] text-foreground sm:text-5xl">
+                Стоматологическое оборудование с&nbsp;гарантией качества
+              </h2>
+              <p className="mt-5 text-base leading-7 text-muted sm:text-lg">
+                Компания занимается продажей стоматологического оборудования,
+                запасных частей и сопутствующих товаров для клиник, кабинетов и
+                лабораторий. Сайт помогает быстро показать ассортимент, принять
+                заявку и передать обращение менеджеру.
+              </p>
+              <Button href="/about" variant="outline" className="mt-8 self-start">
+                Подробнее о компании
+              </Button>
+
+              <div className="mt-10 grid grid-cols-2 gap-4">
+                {[
+                  { value: "500+", label: "позиций в каталоге" },
+                  { value: "8 лет", label: "на рынке" },
+                ].map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="rounded-[20px] border border-border/60 bg-white p-6 shadow-[0_8px_24px_rgba(7,55,99,0.06)]"
+                  >
+                    <span className="block text-5xl font-normal text-foreground sm:text-6xl">
+                      {stat.value}
+                    </span>
+                    <span className="mt-3 block text-base text-foreground">{stat.label}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
-            <div className="relative min-h-[320px] overflow-hidden rounded-[28px] shadow-[0_24px_70px_rgba(7,55,99,0.1)] sm:min-h-[380px] lg:min-h-[430px]">
+            {/* Right: photo */}
+            <div className="relative min-h-[340px] overflow-hidden rounded-[28px] shadow-[0_24px_70px_rgba(7,55,99,0.12)] sm:min-h-[420px] lg:min-h-[520px]">
               <img
-                src="/images/hero/dental-hero-bg.png"
-                alt="Современный стоматологический кабинет"
-                className="absolute inset-0 h-full w-full object-cover object-[72%_center]"
+                src="/images/about-equipment-workshop.png"
+                alt="Стоматологическое оборудование"
+                className="absolute inset-0 h-full w-full object-cover object-center"
                 loading="lazy"
               />
             </div>

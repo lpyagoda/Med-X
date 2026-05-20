@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+import { useLenis } from "@/lib/useLenis";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { LeadModal } from "@/components/forms/LeadModal";
 import { CartDrawer } from "@/components/layout/CartDrawer";
@@ -87,6 +88,8 @@ function AdminLoading() {
 }
 
 export function App() {
+  useLenis();
+
   return (
     <>
       <AdminToaster />

@@ -30,7 +30,7 @@ export function CatalogPage() {
   }, []);
 
   return (
-    <Section>
+    <Section className="pt-28 sm:pt-32 lg:pt-36">
       <Container>
         <SectionTitle
           title="Каталог оборудования"
