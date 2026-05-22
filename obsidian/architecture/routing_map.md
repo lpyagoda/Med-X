@@ -12,7 +12,7 @@ All routes declared in `src/App.tsx` via `<Routes>` from `react-router-dom@7`.
 |---|---|---|
 | `/` | `HomePage` | hero + featured categories + popular products + DurrDental + CTA |
 | `/catalog` | `CatalogPage` | full catalogue with sidebar nav + search |
-| `/catalog/:category` | `CategoryPage` | one category, subcategory chips via `?subcategory=` query; chips wrap, no white card |
+| `/catalog/:category` | `CategoryPage` | one category; `?view=brands` shows brand grid, `?subcategory=` scopes products |
 | `/product/:slug` | `ProductPage` | product detail; gallery + 1-click + add-to-cart |
 | `/cart` | `CartPage` | shopping cart (LocalStorage) |
 | `/checkout` | `CheckoutPage` | name + phone → creates `orders` + `order_items` |

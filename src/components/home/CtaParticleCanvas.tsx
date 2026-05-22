@@ -22,10 +22,10 @@ function seededRandom(seed: number) {
 function createParticles(count: number, width: number, height: number) {
   return Array.from({ length: count }, (_, index): Particle => {
     const x = seededRandom(index + 1) * width;
-    const y = seededRandom(index + 7) * height * 0.52;
-    const radius = 0.7 + seededRandom(index + 13) * 0.9;
-    const alpha = 0.28 + seededRandom(index + 19) * 0.32;
-    const speed = 0.45 + seededRandom(index + 23) * 0.45;
+    const y = seededRandom(index + 7) * height * 0.75;
+    const radius = 0.8 + seededRandom(index + 13) * 1.4;
+    const alpha = 0.32 + seededRandom(index + 19) * 0.38;
+    const speed = 0.7 + seededRandom(index + 23) * 1.1;
     const phase = seededRandom(index + 29) * Math.PI * 2;
 
     return { alpha, phase, radius, speed, x, y };
@@ -68,8 +68,8 @@ export function CtaParticleCanvas({ className }: CtaParticleCanvasProps) {
       context.clearRect(0, 0, rect.width, rect.height);
 
       for (const particle of particles) {
-        const driftX = mediaQuery.matches ? 0 : Math.sin(time * 0.00032 * particle.speed + particle.phase) * 4;
-        const driftY = mediaQuery.matches ? 0 : Math.cos(time * 0.00028 * particle.speed + particle.phase) * 3;
+        const driftX = mediaQuery.matches ? 0 : Math.sin(time * 0.00072 * particle.speed + particle.phase) * 22;
+        const driftY = mediaQuery.matches ? 0 : Math.cos(time * 0.00058 * particle.speed + particle.phase) * 16;
         const fade = Math.max(0, 1 - particle.y / (rect.height * 0.65));
 
         context.globalAlpha = particle.alpha * fade;

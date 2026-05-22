@@ -32,16 +32,16 @@ Planned admin routes — see [[routing-map]].
 | `src/components/layout/` | `Header`, `Footer` | yes — global chrome |
 | `src/components/ui/` | `Button`, `Container`, `Section`, `Modal`, `Input`, `Textarea`, `MagneticButton`, `PillBadge`, `SectionTitle` | yes — used everywhere |
 | `src/components/forms/` | `LeadModal`, `LeadModalTrigger`, `MagneticLeadModalTrigger`, `ConsultationForm`, `ProductOrderForm` | medium — touches `LeadModalContext` and validations |
-| `src/components/home/` | Hero, benefits, CTA, DurrDental blocks | only when redesigning |
+| `src/components/home/` | Hero, benefits, CTA, DurrDental blocks, home background rays | only when redesigning |
 | `src/components/about/` | About-page sections | only when redesigning |
-| `src/components/catalog/` | `CategoryCard/Grid/List/Tags`, `ProductCard/Grid/Search`, `CatalogCategoryNav`, `CatalogToolbar`, `PriceNotice` | yes — central to catalogue UX |
+| `src/components/catalog/` | `CategoryCard/Grid/List/Tags`, `ProductCard/Grid/Search`, `BrandSearch`, `CatalogCategoryNav`, `CatalogToolbar`, `PriceNotice` | yes — central to catalogue UX |
 | `src/components/product/` | `ProductHero`, `ProductCharacteristics`, `ProductDetails`, `ProductOrderPanel`, `Breadcrumbs`, `RelatedProducts` | yes |
 | `src/contexts/LeadModalContext.tsx` | global lead-modal open state | careful — consumed by header + product pages |
 | `src/data/catalog.ts`, `categories.ts`, `products.ts` | **static product data** — will be replaced by Supabase calls in Phase 2 | YES — central to Phase 2 migration |
 | `src/lib/api.ts` | sync data accessors (`getCategories`, `getProducts`, etc.) + form-submit stubs | YES — will become Supabase queries |
 | `src/lib/catalogSearch.ts`, `utils.ts`, `validations.ts` | helpers + zod schemas | yes |
 | `src/types/` | TS types (`Product`, `Category`, `Subcategory`, `ConsultationFormData`, `ProductOrderFormData`, `NavItem`) | yes |
-| `src/styles/globals.css` | Tailwind v4 `@theme inline` + custom CSS classes (`hero-glass`, `magnetic-button-*`, `premium-float-*`, `durr-grid`, `hero-rays`, etc.) | yes |
+| `src/styles/globals.css` | Tailwind v4 `@theme inline` + custom CSS classes (`hero-glass`, `magnetic-button-*`, `premium-float-*`, `home-grid-backdrop`, `home-continuous-grid`, `home-grid-vignette`, `durr-grid`, `hero-rays`, etc.) | yes |
 | `public/images/` | static assets — hero backgrounds, product renders | grow as needed |
 | `obsidian/` | this knowledge base | always update after changes |
 

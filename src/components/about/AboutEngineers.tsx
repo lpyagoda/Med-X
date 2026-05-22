@@ -2,76 +2,73 @@ import { LeadModalTrigger } from "@/components/forms/LeadModalTrigger";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 
-const cards = [
+const steps = [
   {
-    id: "01",
-    title: "Установка оборудования",
-    description:
-      "Подскажем специалистов для подключения и первичной настройки оборудования в кабинете или лаборатории.",
+    num: "01",
+    title: "Тип оборудования",
+    description: "Уточняем, с какой техникой нужна помощь.",
   },
   {
-    id: "02",
-    title: "Диагностика неисправностей",
-    description:
-      "Поможем найти инженера, который сможет определить причину сбоя и предложить решение.",
+    num: "02",
+    title: "Задача клиники",
+    description: "Установка, настройка, диагностика или ремонт.",
   },
   {
-    id: "03",
-    title: "Замена комплектующих",
-    description:
-      "Сориентируем по специалистам для замены деталей, узлов и расходных элементов оборудования.",
+    num: "03",
+    title: "Профиль специалиста",
+    description: "Подсказываем инженера под конкретное направление.",
   },
   {
-    id: "04",
-    title: "Настройка и обслуживание",
-    description:
-      "Подскажем профильных инженеров для настройки оборудования и планового технического обслуживания.",
+    num: "04",
+    title: "Дальнейшие шаги",
+    description: "Помогаем понять, что подготовить перед обращением.",
   },
 ] as const;
+
+const engineerImage = "/images/engineer-service.png";
 
 export function AboutEngineers() {
   return (
     <Section className="py-8 sm:py-10 lg:py-12">
       <Container>
-        <div className="grid gap-8 rounded-[34px] border border-border/70 bg-white/82 p-6 shadow-[0_24px_70px_rgba(7,55,99,0.07)] backdrop-blur sm:p-8 lg:grid-cols-[1fr_1.1fr] lg:items-start lg:p-10">
+        <div className="grid gap-4 lg:grid-cols-[45fr_55fr]">
 
-          <div>
-            <p className="text-sm font-semibold text-primary">Техническая поддержка</p>
-            <h2 className="mt-3 text-3xl font-semibold leading-tight text-foreground sm:text-4xl">
+          {/* Left card — text */}
+          <div className="flex flex-col justify-center rounded-[34px] border border-border/70 bg-[linear-gradient(135deg,#ffffff_0%,#eef9fc_100%)] p-6 shadow-[0_24px_72px_rgba(7,55,99,0.08)] sm:p-8 lg:p-12">
+            <p className="w-fit rounded-full border border-accent/20 bg-[color-mix(in_srgb,var(--accent)_10%,white)] px-4 py-2 text-sm font-semibold text-primary">
+              Инженеры
+            </p>
+
+            <h2 className="mt-5 text-3xl font-semibold leading-[1.08] text-foreground sm:text-4xl lg:text-5xl">
               Проверенные инженеры под конкретное оборудование
             </h2>
+
             <p className="mt-5 text-base leading-7 text-muted sm:text-lg sm:leading-8">
               Если потребуется установка, настройка, диагностика или ремонт
               оборудования, подскажем профильных специалистов под ваш тип
-              техники и задачу.
+              техники.
             </p>
-            <p className="mt-4 text-sm leading-6 text-muted">
-              Поможем сориентироваться, к кому обратиться по вопросам
-              подключения, обслуживания, замены комплектующих или диагностики
-              неисправностей.
+
+            <p className="mt-4 text-base leading-7 text-muted">
+              Помогаем сориентироваться, к кому обратиться по стоматологическим
+              установкам, компрессорам, рентген-оборудованию, наконечникам,
+              стерилизационному оборудованию и другим направлениям.
             </p>
+
             <div className="mt-8">
-              <LeadModalTrigger size="lg">
+              <LeadModalTrigger size="lg" className="w-full sm:w-fit">
                 Получить консультацию
               </LeadModalTrigger>
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            {cards.map((card) => (
-              <div
-                className="rounded-2xl border border-border/60 bg-card-soft p-5 transition-colors hover:bg-white"
-                key={card.id}
-              >
-                <p className="text-xs font-semibold text-primary/60">{card.id}</p>
-                <p className="mt-3 text-base font-semibold leading-snug text-foreground">
-                  {card.title}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-muted">
-                  {card.description}
-                </p>
-              </div>
-            ))}
+          {/* Right card — photo only */}
+          <div className="relative min-h-[460px] overflow-hidden rounded-[34px] border border-border/70 shadow-[0_24px_72px_rgba(7,55,99,0.10)] sm:min-h-[540px] lg:min-h-0">
+            <img
+              alt="Техническое обслуживание стоматологического оборудования"
+              className="absolute inset-0 h-full w-full object-cover object-center"
+              src={engineerImage}
+            />
           </div>
 
         </div>

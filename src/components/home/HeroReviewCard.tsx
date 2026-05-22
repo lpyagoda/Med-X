@@ -45,7 +45,7 @@ export function HeroReviewCard() {
 
   return (
     <div className="pointer-events-none absolute bottom-8 right-8 z-20 hidden lg:block">
-      <div className="hero-glass flex w-[520px] flex-col gap-4 rounded-[28px] p-5 2xl:w-[600px]">
+      <div className="hero-glass flex w-[380px] flex-col gap-4 rounded-[28px] p-5 xl:w-[440px]">
         <div className="flex gap-1" aria-label="Рейтинг 5 из 5">
           {ratingStars.map((star) => (
             <svg

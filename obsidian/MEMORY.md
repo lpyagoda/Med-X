@@ -38,3 +38,7 @@ Conventions: each `.md` file is a self-contained note with frontmatter (`name`, 
 - [2026-05-19 — Categories CRUD + inline subcategories editor](changelog/2026-05-19_categories_crud.md)
 - [2026-05-19 — Phase 3: orders/leads, cart+checkout, gallery, XLSX export](changelog/2026-05-19_phase3_orders_leads.md)
 - [2026-05-19 — Legal: реквизиты, оферта, политика, согласие, cookie-баннер](changelog/2026-05-19_legal.md)
+- [2026-05-22 — About: персональный premium/B2B блок](changelog/2026-05-22_about_personal_approach.md)
+- [2026-05-22 - Home dark rays background](changelog/2026-05-22_home_dark_rays.md)
+- [2026-05-22 - Home grid background](changelog/2026-05-22_home_grid_background.md) - continuous grid behind home categories/DURR/popular blocks
+- [2026-05-22 — Catalog: режим брендов внутри категории](changelog/2026-05-22_catalog_brand_mode.md)

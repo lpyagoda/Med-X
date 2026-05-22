@@ -11,7 +11,21 @@
       "Bash(npm list *)",
       "Bash(git push *)",
       "Bash(grep -E \"^  \\\\{$|^    slug:\" src/data/categories.ts)",
-      "Bash(grep -A1 \"^  {$\")"
+      "Bash(grep -A1 \"^  {$\")",
+      "Bash(npx vite *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5174/)",
+      "Bash(curl -s http://localhost:5174/)",
+      "Bash(curl -v http://localhost:5175/)",
+      "Bash(curl --noproxy localhost -s -o /dev/null -w \"%{http_code}\" http://localhost:5175/)",
+      "Bash(npx playwright *)",
+      "Read(//c/Users/user/AppData/Local/Temp/**)",
+      "Bash(Read-Output b5ta6ta2l *)",
+      "Read(//tmp/**)",
+      "Bash(npx --yes playwright@latest --version)",
+      "Bash(find /c/Users/user -name \"playwright\" -type d 2>/dev/null | grep node_modules | head -5)",
+      "Read(//c/Users/user/**)",
+      "Bash(node -e ' *)",
+      "Bash('button:has-text\\(\\\\\"Принять\\\\\"\\)')"
     ]
   }
 }
