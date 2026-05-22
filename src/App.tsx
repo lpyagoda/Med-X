@@ -161,8 +161,7 @@ export function App() {
               </PublicLayout>
             }
           />
-          <Suspense fallback={<PublicLoading />}>
-            <Route
+          <Route
               path="/catalog"
               element={
                 <PublicLayout>
@@ -258,7 +257,6 @@ export function App() {
                 </PublicLayout>
               }
             />
-          </Suspense>
         </Routes>
       </Suspense>
     </>

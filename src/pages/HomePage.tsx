@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { CategoryGrid } from "@/components/catalog/CategoryGrid";
 import { ProductGrid } from "@/components/catalog/ProductGrid";
+import { AuroraBackground } from "@/components/home/AuroraBackground";
 import { BenefitsSection } from "@/components/home/BenefitsSection";
 import { DurrDentalBlock } from "@/components/home/DurrDentalBlock";
-import { HomeBackgroundRays } from "@/components/home/HomeBackgroundRays";
 import { HeroSection } from "@/components/home/HeroSection";
 import { HomeCTA } from "@/components/home/HomeCTA";
 import { Button } from "@/components/ui/Button";
@@ -12,15 +12,12 @@ import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { getCategories, getProducts } from "@/lib/api";
 import { fetchPublicCategories } from "@/lib/public/catalogue";
-import { useScrollBackground } from "@/lib/useScrollBackground";
-
 export function HomePage() {
   // First paint: static data (instant). Then hydrate from Supabase so admin-
   // uploaded category images appear without a network round-trip blocking render.
   const [categories, setCategories] = useState(() => getCategories());
   const products = getProducts();
   const popularProducts = products.slice(0, 6);
-  const { darkSentinelRef, isDarkBackground } = useScrollBackground();
 
   useEffect(() => {
     let cancelled = false;
@@ -86,18 +83,9 @@ export function HomePage() {
         </div>
       </div>
 
-      <div ref={darkSentinelRef} aria-hidden="true" />
-      <div
-        className="relative isolate transition-colors duration-[1200ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
-        style={{ backgroundColor: isDarkBackground ? "#e8f3f9" : "transparent" }}
-      >
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 z-[10] h-24"
-          style={{ background: "linear-gradient(to bottom, #f6fbff 0%, rgba(246,251,255,0) 100%)" }}
-        />
-        <HomeBackgroundRays visible={isDarkBackground} />
-        <div className="relative z-[1]">
+      <div className="relative" style={{ backgroundColor: "#e8f3f9" }}>
+        <AuroraBackground />
+        <div className="relative">
           <BenefitsSection />
 
           <Section className="py-14 sm:py-18 lg:py-24">
