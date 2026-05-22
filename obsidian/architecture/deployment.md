@@ -11,11 +11,19 @@ metadata:
 - Access: SSH as `root` (user has key wired)
 - Docker: 29.1.3 · Docker Compose: 2.37.1
 
-## Med-X app process (Phase 1 — currently running)
-- Path: `/var/www/med-x/` (uploaded 2026-05-19)
-- **Old Next.js build** still served by pm2 process `med-x` on port **3030**
-- Public URL: `http://188.225.86.146:3030`
-- **Pending:** swap to new Vite SPA build (`dist/`) served by nginx with SPA fallback — Etap I
+## Med-X app (live)
+- Path: `/var/www/med-x/` — git repo on branch `main`
+- Deploy: `git pull` → `npm ci` → `npm run build`; nginx serves `dist/` directly (no pm2)
+- Vite SPA served by **nginx** from `/var/www/med-x/dist`:
+  - vhost `med-x-admin` — port **3030** (`http://188.225.86.146:3030`), used by the Vite dev proxy + seed script
+  - vhost `med-x` — ports **80/443** for the public domains (below)
+- `/__sb__/` proxied by both vhosts to local Supabase (`127.0.0.1:54321`)
+
+## Domains + SSL (since 2026-05-22)
+- `med-ix.ru` / `www.med-ix.ru` and `мед-икс.рф` / `www.мед-икс.рф`
+  (punycode `xn----gtbcokh4b.xn--p1ai`) — all A-records → `188.225.86.146`
+- Let's Encrypt cert `med-ix.ru` covers all 4 hosts, auto-renews; HTTP→HTTPS 301
+- nginx vhost file: `/etc/nginx/sites-available/med-x` (symlinked into `sites-enabled/`)
 
 ## Supabase stack (Phase 2 — running)
 - Path: `/var/www/med-x/supabase/` — initialised via `supabase init` on 2026-05-19

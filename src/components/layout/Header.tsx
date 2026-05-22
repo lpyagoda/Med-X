@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { CartButton } from "@/components/layout/CartButton";
 import { SocialIcons } from "@/components/layout/SocialIcons";
 import { LeadModalTrigger } from "@/components/forms/LeadModalTrigger";
@@ -34,9 +34,19 @@ export function Header() {
             <ul className="flex items-center gap-7 text-sm font-medium text-foreground xl:gap-9 xl:text-base">
               {navItems.map((item) => (
                 <li key={item.href}>
-                  <Link className="transition-colors hover:text-primary" to={item.href}>
+                  <NavLink
+                    to={item.href}
+                    end={item.href === "/"}
+                    className={({ isActive }) =>
+                      `relative transition-colors hover:text-primary ${
+                        isActive
+                          ? "text-primary after:absolute after:-bottom-1.5 after:left-0 after:h-0.5 after:w-full after:rounded-full after:bg-primary"
+                          : ""
+                      }`
+                    }
+                  >
                     {item.label}
-                  </Link>
+                  </NavLink>
                 </li>
               ))}
             </ul>
@@ -106,13 +116,20 @@ export function Header() {
         <ul className="flex flex-col divide-y divide-border/40 px-2 py-2">
           {navItems.map((item) => (
             <li key={item.href}>
-              <Link
-                className="flex min-h-[52px] items-center px-4 text-base font-medium text-foreground transition-colors hover:text-primary"
+              <NavLink
                 to={item.href}
+                end={item.href === "/"}
                 onClick={() => setMobileOpen(false)}
+                className={({ isActive }) =>
+                  `flex min-h-[52px] items-center px-4 text-base font-medium transition-colors hover:text-primary ${
+                    isActive
+                      ? "text-primary underline decoration-2 underline-offset-[6px]"
+                      : "text-foreground"
+                  }`
+                }
               >
                 {item.label}
-              </Link>
+              </NavLink>
             </li>
           ))}
         </ul>

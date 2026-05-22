@@ -20,10 +20,11 @@ export const EMAIL = {
   href: "mailto:Rada-Med-X@yandex.ru",
 } as const;
 
-// All messengers are bound to the primary phone number.
-export const TELEGRAM_URL = `https://t.me/+${PRIMARY_PHONE.digits}`;
-export const WHATSAPP_URL = `https://wa.me/${PRIMARY_PHONE.digits}`;
-export const MAX_URL = `https://max.ru/+${PRIMARY_PHONE.digits}`;
+// Messengers are bound to a dedicated number, independent of the phones above.
+const MESSENGER_DIGITS = "79821981521";
+export const TELEGRAM_URL = `https://t.me/+${MESSENGER_DIGITS}`;
+export const WHATSAPP_URL = `https://wa.me/${MESSENGER_DIGITS}`;
+export const MAX_URL = `https://max.ru/+${MESSENGER_DIGITS}`;
 
 export const WORK_HOURS = {
   hours: "10:00–19:00",

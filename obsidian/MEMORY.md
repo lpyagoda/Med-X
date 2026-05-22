@@ -29,6 +29,7 @@ Conventions: each `.md` file is a self-contained note with frontmatter (`name`, 
 - [006 — Supabase Auth + seeded admin user](decisions/adr_006_admin_auth_supabase.md)
 
 ## Changelog
+- [2026-05-22 — Юр-данные ИП, домен med-ix.ru, регламент возврата, привязка мессенджеров, логотип в футере](changelog/2026-05-22_legal_data_contacts.md)
 - [2026-05-19 — Next.js → Vite migration](changelog/2026-05-19_next_to_vite_migration.md)
 - [2026-05-19 — Phase 2 Etaps A + B + C scaffold](changelog/2026-05-19_phase2_etaps_a_b_c.md)
 - [2026-05-19 — Phase 2 Etaps D + E (Supabase + schema)](changelog/2026-05-19_phase2_etaps_d_e.md)
