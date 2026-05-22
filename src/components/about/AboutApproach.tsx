@@ -19,6 +19,7 @@ export function AboutApproach() {
             <img
               alt="Представитель компании МЕД-ИКС консультирует клиента"
               className="h-[380px] w-full rounded-[32px] object-cover object-center sm:h-[460px] md:h-full"
+              loading="lazy"
               onError={(event) => {
                 event.currentTarget.onerror = null;
                 event.currentTarget.src = representativeFallbackImage;

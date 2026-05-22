@@ -8,20 +8,47 @@ import { Header } from "@/components/layout/Header";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { CookieBanner } from "@/components/legal/CookieBanner";
 import { RequireAdmin } from "@/components/admin/RequireAdmin";
-import { HomePage } from "@/pages/HomePage";
-import { CatalogPage } from "@/pages/CatalogPage";
-import { CategoryPage } from "@/pages/CategoryPage";
-import { ProductPage } from "@/pages/ProductPage";
-import { CartPage } from "@/pages/CartPage";
-import { CheckoutPage } from "@/pages/CheckoutPage";
-import { AboutPage } from "@/pages/AboutPage";
-import { ContactsPage } from "@/pages/ContactsPage";
-import { NotFoundPage } from "@/pages/NotFoundPage";
-import { PrivacyPage } from "@/pages/legal/PrivacyPage";
-import { OfferPage } from "@/pages/legal/OfferPage";
-import { PersonalDataPage } from "@/pages/legal/PersonalDataPage";
-import { RequisitesPage } from "@/pages/legal/RequisitesPage";
 import { AdminToaster } from "@/components/admin/ui/toast";
+
+// Public pages — lazy loaded so each route is a separate chunk.
+// HomePage is kept eager as it's the most-visited entry point.
+import { HomePage } from "@/pages/HomePage";
+const CatalogPage = lazy(() =>
+  import("@/pages/CatalogPage").then((m) => ({ default: m.CatalogPage })),
+);
+const CategoryPage = lazy(() =>
+  import("@/pages/CategoryPage").then((m) => ({ default: m.CategoryPage })),
+);
+const ProductPage = lazy(() =>
+  import("@/pages/ProductPage").then((m) => ({ default: m.ProductPage })),
+);
+const CartPage = lazy(() =>
+  import("@/pages/CartPage").then((m) => ({ default: m.CartPage })),
+);
+const CheckoutPage = lazy(() =>
+  import("@/pages/CheckoutPage").then((m) => ({ default: m.CheckoutPage })),
+);
+const AboutPage = lazy(() =>
+  import("@/pages/AboutPage").then((m) => ({ default: m.AboutPage })),
+);
+const ContactsPage = lazy(() =>
+  import("@/pages/ContactsPage").then((m) => ({ default: m.ContactsPage })),
+);
+const NotFoundPage = lazy(() =>
+  import("@/pages/NotFoundPage").then((m) => ({ default: m.NotFoundPage })),
+);
+const PrivacyPage = lazy(() =>
+  import("@/pages/legal/PrivacyPage").then((m) => ({ default: m.PrivacyPage })),
+);
+const OfferPage = lazy(() =>
+  import("@/pages/legal/OfferPage").then((m) => ({ default: m.OfferPage })),
+);
+const PersonalDataPage = lazy(() =>
+  import("@/pages/legal/PersonalDataPage").then((m) => ({ default: m.PersonalDataPage })),
+);
+const RequisitesPage = lazy(() =>
+  import("@/pages/legal/RequisitesPage").then((m) => ({ default: m.RequisitesPage })),
+);
 
 // Admin chunks lazy-loaded — keeps the public bundle slim (no xlsx / supabase admin code there).
 const AdminLoginPage = lazy(() =>
@@ -87,6 +114,11 @@ function AdminLoading() {
   );
 }
 
+/** Minimal full-height blank shown while a public page chunk loads. */
+function PublicLoading() {
+  return <div className="min-h-screen" aria-hidden="true" />;
+}
+
 export function App() {
   useLenis();
 
@@ -119,7 +151,8 @@ export function App() {
             <Route path="leads" element={<AdminLeadsPage />} />
           </Route>
 
-          {/* Public site */}
+          {/* Public site — each page is a separate lazy chunk; Suspense shows a
+              blank full-height div while the small chunk downloads. */}
           <Route
             path="/"
             element={
@@ -128,102 +161,104 @@ export function App() {
               </PublicLayout>
             }
           />
-          <Route
-            path="/catalog"
-            element={
-              <PublicLayout>
-                <CatalogPage />
-              </PublicLayout>
-            }
-          />
-          <Route
-            path="/catalog/:category"
-            element={
-              <PublicLayout>
-                <CategoryPage />
-              </PublicLayout>
-            }
-          />
-          <Route
-            path="/product/:slug"
-            element={
-              <PublicLayout>
-                <ProductPage />
-              </PublicLayout>
-            }
-          />
-          <Route
-            path="/cart"
-            element={
-              <PublicLayout>
-                <CartPage />
-              </PublicLayout>
-            }
-          />
-          <Route
-            path="/checkout"
-            element={
-              <PublicLayout>
-                <CheckoutPage />
-              </PublicLayout>
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              <PublicLayout>
-                <AboutPage />
-              </PublicLayout>
-            }
-          />
-          <Route
-            path="/contacts"
-            element={
-              <PublicLayout>
-                <ContactsPage />
-              </PublicLayout>
-            }
-          />
-          <Route
-            path="/privacy"
-            element={
-              <PublicLayout>
-                <PrivacyPage />
-              </PublicLayout>
-            }
-          />
-          <Route
-            path="/offer"
-            element={
-              <PublicLayout>
-                <OfferPage />
-              </PublicLayout>
-            }
-          />
-          <Route
-            path="/personal-data"
-            element={
-              <PublicLayout>
-                <PersonalDataPage />
-              </PublicLayout>
-            }
-          />
-          <Route
-            path="/requisites"
-            element={
-              <PublicLayout>
-                <RequisitesPage />
-              </PublicLayout>
-            }
-          />
-          <Route
-            path="*"
-            element={
-              <PublicLayout>
-                <NotFoundPage />
-              </PublicLayout>
-            }
-          />
+          <Suspense fallback={<PublicLoading />}>
+            <Route
+              path="/catalog"
+              element={
+                <PublicLayout>
+                  <CatalogPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/catalog/:category"
+              element={
+                <PublicLayout>
+                  <CategoryPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/product/:slug"
+              element={
+                <PublicLayout>
+                  <ProductPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/cart"
+              element={
+                <PublicLayout>
+                  <CartPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/checkout"
+              element={
+                <PublicLayout>
+                  <CheckoutPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                <PublicLayout>
+                  <AboutPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/contacts"
+              element={
+                <PublicLayout>
+                  <ContactsPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/privacy"
+              element={
+                <PublicLayout>
+                  <PrivacyPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/offer"
+              element={
+                <PublicLayout>
+                  <OfferPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/personal-data"
+              element={
+                <PublicLayout>
+                  <PersonalDataPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/requisites"
+              element={
+                <PublicLayout>
+                  <RequisitesPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <PublicLayout>
+                  <NotFoundPage />
+                </PublicLayout>
+              }
+            />
+          </Suspense>
         </Routes>
       </Suspense>
     </>

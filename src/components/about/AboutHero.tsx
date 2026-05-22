@@ -31,6 +31,7 @@ export function AboutHero() {
             alt=""
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 h-full w-full object-cover object-right opacity-30"
+            loading="eager"
           />
           <div
             aria-hidden="true"

@@ -7,7 +7,7 @@ export function useScrollBackground() {
   useEffect(() => {
     const el = sentinelRef.current;
     if (!el) return;
-    let animationFrameId = 0;
+    let rafId = 0;
     let previousDarkBackground: boolean | null = null;
 
     const syncBackground = () => {
@@ -23,18 +23,22 @@ export function useScrollBackground() {
       setIsDarkBackground(shouldUseDarkBackground);
     };
 
-    const tick = () => {
-      syncBackground();
-      animationFrameId = window.requestAnimationFrame(tick);
+    // Throttle via rAF: fire at most once per frame on scroll, not every frame.
+    const onScroll = () => {
+      if (rafId) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = 0;
+        syncBackground();
+      });
     };
 
-    window.addEventListener("scroll", syncBackground, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
+    // Run once on mount to set the initial state.
     syncBackground();
-    animationFrameId = window.requestAnimationFrame(tick);
 
     return () => {
-      window.removeEventListener("scroll", syncBackground);
-      window.cancelAnimationFrame(animationFrameId);
+      window.removeEventListener("scroll", onScroll);
+      if (rafId) window.cancelAnimationFrame(rafId);
       document.body.classList.remove("dark-bg");
       setIsDarkBackground(false);
     };

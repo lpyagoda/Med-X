@@ -134,6 +134,7 @@ export function BenefitsSection() {
               src={b.image}
               alt={b.title}
               className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
+              loading={i === 0 ? "eager" : "lazy"}
               style={{ opacity: i === active ? 1 : 0 }}
             />
           ))}

@@ -67,6 +67,7 @@ export function AboutEngineers() {
             <img
               alt="Техническое обслуживание стоматологического оборудования"
               className="absolute inset-0 h-full w-full object-cover object-center"
+              loading="lazy"
               src={engineerImage}
             />
           </div>

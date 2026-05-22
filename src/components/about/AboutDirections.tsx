@@ -116,6 +116,7 @@ export function AboutDirections() {
                   src={dir.image}
                   alt={dir.title}
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
                   onError={(e) => {
                     e.currentTarget.onerror = null;
                     e.currentTarget.src = "/images/about-equipment-workshop.png";
