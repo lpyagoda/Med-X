@@ -51,7 +51,7 @@ export function Footer() {
           background: `radial-gradient(400px at ${mouseX}px 0px, rgba(59,130,246,0.7), transparent 70%)`,
         }}
       />
-      <Container className="grid gap-8 py-12 md:grid-cols-[1.4fr_1fr_1.4fr_1.1fr]">
+      <Container className="grid gap-8 py-12 sm:grid-cols-2 md:grid-cols-[1.4fr_1fr_1.4fr_1.1fr]">
         <div>
           <Link className="text-xl font-bold text-primary" to="/">
             MED-IX

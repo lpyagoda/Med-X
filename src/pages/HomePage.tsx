@@ -140,7 +140,7 @@ export function HomePage() {
                 </div>
 
                 {/* Right: photo */}
-                <div className="relative self-stretch overflow-hidden rounded-[28px] shadow-[0_24px_70px_rgba(7,55,99,0.12)]">
+                <div className="relative min-h-[280px] self-stretch overflow-hidden rounded-[28px] shadow-[0_24px_70px_rgba(7,55,99,0.12)] sm:min-h-[360px] lg:min-h-0">
                   <img
                     src="/images/about-equipment-workshop.png"
                     alt="Стоматологическое оборудование"

@@ -63,7 +63,7 @@ export function AboutEngineers() {
           </div>
 
           {/* Right card — photo only */}
-          <div className="relative min-h-[460px] overflow-hidden rounded-[34px] border border-border/70 shadow-[0_24px_72px_rgba(7,55,99,0.10)] sm:min-h-[540px] lg:min-h-0">
+          <div className="relative min-h-[280px] overflow-hidden rounded-[34px] border border-border/70 shadow-[0_24px_72px_rgba(7,55,99,0.10)] sm:min-h-[400px] lg:min-h-0">
             <img
               alt="Техническое обслуживание стоматологического оборудования"
               className="absolute inset-0 h-full w-full object-cover object-center"

@@ -66,7 +66,7 @@ export function AboutHero() {
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               {heroBadges.map((badge) => (
                 <div
                   className={`${badge.animClass} rounded-2xl border border-white/80 bg-white/70 px-4 py-5 backdrop-blur-sm`}

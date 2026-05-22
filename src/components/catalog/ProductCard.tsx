@@ -48,7 +48,7 @@ export function ProductCard({ product, variant = "default" }: ProductCardProps) 
   if (variant === "minimal") {
     return (
       <article
-        className="group relative flex min-h-[500px] flex-col overflow-hidden rounded-[28px] border border-white/60 bg-white/34 p-5 text-foreground shadow-[0_24px_70px_rgba(7,55,99,0.08)] backdrop-blur-2xl transition-all duration-300 hover:-translate-y-1 hover:border-white hover:bg-white hover:shadow-[0_36px_92px_rgba(7,55,99,0.16)]"
+        className="group relative flex min-h-[400px] flex-col overflow-hidden rounded-[28px] border border-white/60 bg-white/34 p-5 text-foreground shadow-[0_24px_70px_rgba(7,55,99,0.08)] backdrop-blur-2xl transition-all duration-300 hover:-translate-y-1 hover:border-white hover:bg-white hover:shadow-[0_36px_92px_rgba(7,55,99,0.16)] sm:min-h-[500px]"
         id={product.slug}
       >
         <CardOverlay product={product} />

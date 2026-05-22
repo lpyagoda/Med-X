@@ -51,7 +51,8 @@ export function Modal({ children, className, onClose, open, title }: ModalProps)
 
       <div
         className={cn(
-          "relative w-full max-w-lg rounded-[28px] border border-border/80 bg-white p-6 shadow-[0_32px_96px_rgba(7,55,99,0.2)] sm:p-8",
+          "relative w-full max-w-lg overflow-y-auto rounded-[28px] border border-border/80 bg-white p-6 shadow-[0_32px_96px_rgba(7,55,99,0.2)] sm:p-8",
+          "max-h-[90vh]",
           className,
         )}
         ref={panelRef}

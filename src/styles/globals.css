@@ -110,6 +110,7 @@ body.dark-bg {
 
   body {
     min-height: 100vh;
+    overflow-x: hidden;
     background:
       linear-gradient(180deg, rgba(246, 251, 255, 0.96) 0%, rgba(238, 247, 251, 0.72) 48%, #f8fcff 100%),
       var(--background);

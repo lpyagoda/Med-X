@@ -56,7 +56,7 @@ export function HeroSection() {
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/60">
               МЕД-ИКС
             </p>
-            <h1 className="text-[2.6rem] font-semibold leading-[1.04] text-white sm:text-[3.2rem] lg:text-[clamp(3rem,4.2vw,4rem)]">
+            <h1 className="text-[2rem] font-semibold leading-[1.08] text-white sm:text-[2.6rem] md:text-[3.2rem] lg:text-[clamp(3rem,4.2vw,4rem)]">
               Стоматологическое оборудование, запасные части и комплектующие
             </h1>
             <p className="mt-5 max-w-[520px] text-base leading-7 text-white sm:text-[1.05rem]">
