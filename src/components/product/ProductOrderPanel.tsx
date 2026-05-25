@@ -8,6 +8,7 @@ type ProductOrderPanelProps = {
   product: Product;
 };
 
+
 export function ProductOrderPanel({ product }: ProductOrderPanelProps) {
   const [quantity, setQuantity] = useState(1);
   const [quickOpen, setQuickOpen] = useState(false);
@@ -47,6 +48,16 @@ export function ProductOrderPanel({ product }: ProductOrderPanelProps) {
   return (
     <div className="flex h-full flex-col gap-6 lg:sticky lg:top-28">
       <aside className="rounded-[30px] border border-border/70 bg-white/86 p-6 shadow-[0_24px_70px_rgba(7,55,99,0.1)] backdrop-blur">
+        <h1 className="text-2xl font-semibold leading-[1.1] text-foreground sm:text-3xl">
+          {product.title}
+        </h1>
+        {product.shortDescription && (
+          <p className="mt-3 text-sm text-muted" style={{ lineHeight: "1.2" }}>
+            {product.shortDescription}
+          </p>
+        )}
+        <div className="my-5 h-px bg-border/60" />
+
         <div className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-border/70 bg-white/80 px-3.5 py-1.5 text-sm font-semibold">
           <span
             className={`h-2 w-2 shrink-0 rounded-full ${isInStock ? "bg-emerald-500" : "bg-amber-500"}`}

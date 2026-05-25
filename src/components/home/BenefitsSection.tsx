@@ -115,55 +115,95 @@ export function BenefitsSection() {
   }, [active]);
 
   return (
-    <Section>
+    <Section className="py-10 sm:py-14 lg:py-20">
       <Container>
         <div>
-          <h2 className="text-4xl font-semibold text-foreground sm:text-5xl">
+          <h2 className="text-3xl font-semibold text-foreground sm:text-4xl lg:text-5xl">
             Почему с нами удобно работать
           </h2>
-          <p className="mt-4 text-lg text-muted">
+          <p className="mt-3 text-base text-muted sm:text-lg">
             Менеджер помогает быстро сузить выбор и передать в работу понятную заявку
           </p>
         </div>
 
-        {/* Image carousel */}
-        <div className="relative mt-8 h-[360px] overflow-hidden rounded-[24px] shadow-[0_24px_64px_rgba(7,55,99,0.10)] sm:h-[460px] lg:h-[560px]">
-          {benefits.map((b, i) => (
-            <img
-              key={b.image}
-              src={b.image}
-              alt={b.title}
-              className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
-              loading={i === 0 ? "eager" : "lazy"}
-              style={{ opacity: i === active ? 1 : 0 }}
-            />
-          ))}
+        {/* Mobile: vertical accordion list */}
+        <div className="mt-5 flex flex-col gap-2 sm:hidden">
+          {benefits.map((benefit, i) => {
+            const isActive = i === active;
+            return (
+              <button
+                key={benefit.title}
+                onClick={() => goTo(i)}
+                className="w-full cursor-pointer overflow-hidden rounded-[18px] border border-border/50 bg-white/80 text-left backdrop-blur-sm transition-colors duration-300"
+              >
+                {/* Always visible: icon + title + progress */}
+                <div className="flex items-center gap-3 p-4">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#dbeafe,#e0f2fe)] shadow-sm">
+                    {benefit.icon}
+                  </span>
+                  <h3 className="flex-1 text-sm font-semibold leading-snug text-foreground">{benefit.title}</h3>
+                  {isActive && (
+                    <div className="h-0.5 w-10 shrink-0 overflow-hidden rounded-full bg-border/60">
+                      <div key={active} className="h-full rounded-full bg-primary" style={{ animation: `progress-fill ${DURATION}ms linear forwards` }} />
+                    </div>
+                  )}
+                </div>
+
+                {/* Expandable: description + image */}
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateRows: isActive ? "1fr" : "0fr",
+                    transition: "grid-template-rows 400ms ease",
+                  }}
+                >
+                  <div className="overflow-hidden">
+                    <div className="px-4 pb-4">
+                      <p className="text-xs leading-5 text-muted">{benefit.description}</p>
+                      <img
+                        src={benefit.image}
+                        alt={benefit.title}
+                        className="mt-3 h-[130px] w-full rounded-[12px] object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Cards */}
-        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {benefits.map((benefit, i) => (
-            <MagneticCard key={benefit.title} onClick={() => goTo(i)}>
-              <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#dbeafe,#e0f2fe)] shadow-sm">
-                {benefit.icon}
-              </span>
-              <h3 className="text-lg font-semibold leading-snug text-foreground">
-                {benefit.title}
-              </h3>
-              <p className="text-sm leading-6 text-muted">{benefit.description}</p>
-
-              {/* Progress bar */}
-              <div className="mt-auto h-0.5 w-full overflow-hidden rounded-full bg-border/60">
-                {i === active && (
-                  <div
-                    key={active}
-                    className="h-full rounded-full bg-primary"
-                    style={{ animation: `progress-fill ${DURATION}ms linear forwards` }}
-                  />
-                )}
-              </div>
-            </MagneticCard>
-          ))}
+        {/* Desktop: image carousel + 4-col cards */}
+        <div className="hidden sm:block">
+          <div className="relative mt-8 h-[460px] overflow-hidden rounded-[24px] shadow-[0_24px_64px_rgba(7,55,99,0.10)] lg:h-[560px]">
+            {benefits.map((b, i) => (
+              <img
+                key={b.image}
+                src={b.image}
+                alt={b.title}
+                className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
+                loading={i === 0 ? "eager" : "lazy"}
+                style={{ opacity: i === active ? 1 : 0 }}
+              />
+            ))}
+          </div>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {benefits.map((benefit, i) => (
+              <MagneticCard key={benefit.title} onClick={() => goTo(i)}>
+                <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#dbeafe,#e0f2fe)] shadow-sm">
+                  {benefit.icon}
+                </span>
+                <h3 className="text-lg font-semibold leading-snug text-foreground">{benefit.title}</h3>
+                <p className="text-sm leading-6 text-muted">{benefit.description}</p>
+                <div className="mt-auto h-0.5 w-full overflow-hidden rounded-full bg-border/60">
+                  {i === active && (
+                    <div key={active} className="h-full rounded-full bg-primary" style={{ animation: `progress-fill ${DURATION}ms linear forwards` }} />
+                  )}
+                </div>
+              </MagneticCard>
+            ))}
+          </div>
         </div>
       </Container>
     </Section>

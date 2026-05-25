@@ -21,7 +21,7 @@ export function SectionTitle({
         {title}
       </h2>
       {description ? (
-        <p className="mt-5 max-w-2xl text-base leading-7 text-muted sm:text-lg">
+        <p className="mt-5 max-w-2xl text-base text-muted sm:text-lg" style={{ lineHeight: "1.2" }}>
           {description}
         </p>
       ) : null}

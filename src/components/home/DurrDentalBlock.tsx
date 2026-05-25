@@ -30,7 +30,7 @@ const durrProducts = [
 
 export function DurrDentalBlock() {
   return (
-    <div className="relative h-[500px] overflow-hidden rounded-[36px] border border-border/80 bg-[#FBFEFE] p-6 shadow-[0_28px_80px_rgba(7,55,99,0.08)] sm:p-8 lg:p-10">
+    <div className="relative overflow-hidden rounded-[36px] border border-border/80 bg-[#FBFEFE] p-6 shadow-[0_28px_80px_rgba(7,55,99,0.08)] sm:p-8 lg:h-[500px] lg:p-10">
       <div className="grid h-full gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
         <div className="relative z-10 max-w-2xl">
           <p className="text-sm font-semibold text-accent">Брендовое направление</p>

@@ -23,65 +23,50 @@ const heroBadges = [
 
 export function AboutHero() {
   return (
-    <Section className="pb-8 pt-24 sm:pt-28 lg:pt-28">
-      <Container>
-        <div className="relative overflow-hidden rounded-[36px] border border-border/70 bg-[linear-gradient(135deg,#ffffff_0%,#eef9fc_58%,#f8fcff_100%)] p-6 shadow-[0_28px_84px_rgba(7,55,99,0.08)] sm:p-8 lg:p-12">
-          <img
-            src="/images/about-hero-equipment-bg.png"
-            alt=""
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover object-right opacity-30"
-            loading="eager"
-          />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.97)_0%,rgba(255,255,255,0.85)_45%,rgba(255,255,255,0.1)_100%)]"
-          />
+    <Section className="relative overflow-hidden pb-12 pt-24 sm:pt-28 lg:pt-28">
+      {/* Full-bleed background image */}
+      <img
+        src="/images/about-hero-equipment-bg.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-60"
+        loading="eager"
+      />
 
-          <div className="relative">
-            <p className="text-sm font-semibold text-primary">MED-IX</p>
-            <h1 className="mt-5 max-w-5xl text-3xl font-semibold leading-[1.06] text-foreground sm:text-4xl lg:text-5xl">
-              Поставляем стоматологическое оборудование, запасные части и
-              сопутствующие товары для клиник, кабинетов и зуботехнических
-              лабораторий
-            </h1>
+      {/* Content */}
+      <Container className="relative">
+        <div className="max-w-2xl rounded-2xl bg-white/80 p-6 backdrop-blur-sm sm:p-8">
+          <p className="text-sm font-semibold text-primary">MED-IX</p>
+          <h1 className="mt-4 text-2xl font-semibold leading-[1.06] text-foreground sm:text-3xl lg:text-4xl">
+            Поставляем стоматологическое оборудование, запасные части и
+            сопутствующие товары для клиник, кабинетов и зуботехнических
+            лабораторий
+          </h1>
+          <p className="mt-5 text-base text-muted" style={{ lineHeight: "1.2" }}>
+            Помогаем подобрать нужные позиции под задачу, уточнить
+            характеристики, стоимость, сроки поставки и условия заказа.
+          </p>
+
+          {/* Badges — horizontal with wrap */}
+          <div className="mt-5 flex flex-wrap gap-2">
+            {heroBadges.map((badge) => (
+              <div
+                key={badge.value}
+                className="rounded-xl border border-white/80 bg-white/70 px-3 py-2 backdrop-blur-sm"
+              >
+                <p className="text-sm font-semibold leading-none text-foreground">{badge.value}</p>
+                <p className="mt-1 text-xs font-medium leading-tight text-muted">{badge.label}</p>
+              </div>
+            ))}
           </div>
 
-          <div className="relative mt-8 grid gap-8 lg:grid-cols-[1fr_minmax(0,1.1fr)] lg:items-end">
-            <div>
-              <p className="text-lg leading-8 text-muted">
-                Помогаем подобрать нужные позиции под задачу, уточнить
-                характеристики, стоимость, сроки поставки и условия заказа.
-              </p>
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <Button className="w-full sm:w-fit" href="/catalog" size="lg">
-                  Перейти в каталог
-                </Button>
-                <LeadModalTrigger
-                  className="w-full sm:w-fit"
-                  size="lg"
-                  variant="outline"
-                >
-                  Оставить заявку
-                </LeadModalTrigger>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-              {heroBadges.map((badge) => (
-                <div
-                  className={`${badge.animClass} rounded-2xl border border-white/80 bg-white/70 px-4 py-5 backdrop-blur-sm`}
-                  key={badge.value}
-                >
-                  <p className="text-xl font-semibold leading-none text-foreground sm:text-2xl">
-                    {badge.value}
-                  </p>
-                  <p className="mt-2 text-xs font-medium leading-tight text-muted sm:text-sm">
-                    {badge.label}
-                  </p>
-                </div>
-              ))}
-            </div>
+          <div className="mt-6 flex flex-col gap-3">
+            <Button href="/catalog" size="lg" className="w-full">
+              Перейти в каталог
+            </Button>
+            <LeadModalTrigger size="lg" variant="outline" className="w-full">
+              Оставить заявку
+            </LeadModalTrigger>
           </div>
         </div>
       </Container>

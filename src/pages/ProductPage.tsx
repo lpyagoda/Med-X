@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
-import { Breadcrumbs } from "@/components/product/Breadcrumbs";
 import { ProductCharacteristics } from "@/components/product/ProductCharacteristics";
 import { ProductDetails } from "@/components/product/ProductDetails";
 import { ProductHero } from "@/components/product/ProductHero";
@@ -36,10 +35,7 @@ export function ProductPage() {
 
     (async () => {
       try {
-        // 1) Try exact slug match in Supabase.
         let row = await fetchPublicProductBySlug(slug);
-        // 2) Fallback to title match — covers the case when DB slugs differ
-        //    from old static-data slugs (Phase 2 migration leftover).
         if (!row && staticProduct) {
           row = await fetchPublicProductByTitle(staticProduct.title);
         }
@@ -68,24 +64,19 @@ export function ProductPage() {
   const view = product ?? staticProduct;
   if (!view) return null;
 
-  return (
-    <Section>
-      <Container>
-        <Breadcrumbs
-          items={[
-            { label: "Главная", href: "/" },
-            { label: "Каталог", href: "/catalog" },
-            { label: view.categoryName, href: `/catalog/${view.categorySlug}` },
-            { label: view.title },
-          ]}
-        />
+  const characteristics = [
+    ...(view.brand ? [{ name: "Бренд", value: view.brand }] : []),
+    ...(view.manufacturer ? [{ name: "Производитель", value: view.manufacturer }] : []),
+    ...(view.characteristics ?? []),
+  ];
 
-        <div className="mt-8">
-          <ProductHero product={view} />
-        </div>
+  return (
+    <Section className="pt-24 sm:pt-28 lg:pt-32">
+      <Container>
+        <ProductHero product={view} />
 
         <div className="mt-10 grid gap-8">
-          <ProductCharacteristics characteristics={view.characteristics} />
+          <ProductCharacteristics characteristics={characteristics} />
           <ProductDetails
             description={view.description}
             shortDescription={view.shortDescription}

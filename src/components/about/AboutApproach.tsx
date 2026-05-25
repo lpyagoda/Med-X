@@ -54,9 +54,14 @@ export function AboutApproach() {
             <div className="mt-8 grid gap-3 xl:grid-cols-3">
               {approachPoints.map((point) => (
                 <div
-                  className="rounded-[20px] border border-border/70 bg-card-soft px-4 py-4 text-sm font-semibold leading-5 text-foreground shadow-[0_12px_30px_rgba(7,55,99,0.05)]"
+                  className="flex items-center gap-3 rounded-[20px] border border-border/70 bg-card-soft px-4 py-4 text-sm font-semibold leading-5 text-foreground shadow-[0_12px_30px_rgba(7,55,99,0.05)]"
                   key={point}
                 >
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary">
+                    <svg aria-hidden="true" className="h-3 w-3 text-white" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" viewBox="0 0 24 24">
+                      <path d="m5 13 4 4L19 7" />
+                    </svg>
+                  </span>
                   {point}
                 </div>
               ))}

@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CategoryGrid } from "@/components/catalog/CategoryGrid";
 import { ProductGrid } from "@/components/catalog/ProductGrid";
-import { AuroraBackground } from "@/components/home/AuroraBackground";
 import { BenefitsSection } from "@/components/home/BenefitsSection";
 import { DurrDentalBlock } from "@/components/home/DurrDentalBlock";
 import { HeroSection } from "@/components/home/HeroSection";
@@ -12,12 +11,15 @@ import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { getCategories, getProducts } from "@/lib/api";
 import { fetchPublicCategories } from "@/lib/public/catalogue";
+import { useParallax } from "@/lib/useParallax";
+
 export function HomePage() {
   // First paint: static data (instant). Then hydrate from Supabase so admin-
   // uploaded category images appear without a network round-trip blocking render.
   const [categories, setCategories] = useState(() => getCategories());
   const products = getProducts();
   const popularProducts = products.slice(0, 6);
+  const gridRef = useParallax(0.1);
 
   useEffect(() => {
     let cancelled = false;
@@ -38,15 +40,9 @@ export function HomePage() {
     <>
       <HeroSection />
 
-      <div style={{ backgroundColor: "#f6fbff" }}>
-      <div className="relative isolate z-[1]">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-40"
-          style={{ background: "linear-gradient(to bottom, rgba(246,251,255,0) 0%, #f6fbff 100%)" }}
-        />
+      <div className="relative isolate">
         <div aria-hidden="true" className="home-grid-backdrop pointer-events-none absolute inset-0 z-0">
-          <div className="home-continuous-grid absolute inset-0" />
+          <div ref={gridRef as React.RefObject<HTMLDivElement>} className="home-continuous-grid absolute inset-0" style={{ willChange: "transform" }} />
           <div className="home-grid-vignette sticky top-0 h-svh w-full" />
         </div>
         <div className="relative z-10">
@@ -80,36 +76,29 @@ export function HomePage() {
               <ProductGrid products={popularProducts} variant="minimal" className="mt-10" />
             </Container>
           </Section>
-        </div>
-      </div>
 
-      <div className="relative" style={{ backgroundColor: "#e8f3f9" }}>
-        <AuroraBackground />
-        <div className="relative">
           <BenefitsSection />
 
           <Section className="py-14 sm:py-18 lg:py-24">
             <Container>
               <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-                {/* Left: text + stats */}
+                {/* Left: text */}
                 <div className="flex flex-col">
-                  <div className="rounded-[24px] border border-border/60 bg-white p-8 shadow-[0_8px_32px_rgba(7,55,99,0.07)]">
-                    <p className="text-sm font-medium text-muted">О компании</p>
-                    <h2 className="mt-3 text-4xl font-bold leading-[1.08] text-foreground sm:text-5xl">
-                      Стоматологическое оборудование с&nbsp;гарантией качества
-                    </h2>
-                    <p className="mt-5 text-base leading-7 text-muted sm:text-lg">
-                      Компания занимается продажей стоматологического оборудования,
-                      запасных частей и сопутствующих товаров для клиник, кабинетов и
-                      лабораторий. Сайт помогает быстро показать ассортимент, принять
-                      заявку и передать обращение менеджеру.
-                    </p>
-                    <Button href="/about" variant="outline" className="mt-8 self-start">
-                      Подробнее о компании
-                    </Button>
-                  </div>
+                  <p className="text-sm font-medium text-muted">О компании</p>
+                  <h2 className="mt-3 text-4xl font-bold leading-[1.08] text-foreground sm:text-5xl">
+                    Стоматологическое оборудование с&nbsp;гарантией качества
+                  </h2>
+                  <p className="mt-5 text-base leading-7 text-muted sm:text-lg">
+                    Компания занимается продажей стоматологического оборудования,
+                    запасных частей и сопутствующих товаров для клиник, кабинетов и
+                    лабораторий. Сайт помогает быстро показать ассортимент, принять
+                    заявку и передать обращение менеджеру.
+                  </p>
+                  <Button href="/about" variant="outline" className="mt-8 self-start">
+                    Подробнее о компании
+                  </Button>
 
-                  <div className="mt-4 grid grid-cols-2 gap-4">
+                  <div className="mt-8 grid grid-cols-2 gap-4">
                     {[
                       { value: "500+", label: "позиций в каталоге" },
                       { value: "8 лет", label: "на рынке" },
@@ -142,7 +131,6 @@ export function HomePage() {
 
           <HomeCTA />
         </div>
-      </div>
       </div>
     </>
   );

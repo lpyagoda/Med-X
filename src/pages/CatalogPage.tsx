@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { CatalogCategoryNav } from "@/components/catalog/CatalogCategoryNav";
+import { CatalogQuickCategories } from "@/components/catalog/CatalogQuickCategories";
+import { MobileFilterDrawer } from "@/components/catalog/MobileFilterDrawer";
 import { PriceNotice } from "@/components/catalog/PriceNotice";
 import { ProductSearch } from "@/components/catalog/ProductSearch";
 import { Container } from "@/components/ui/Container";
@@ -9,9 +11,8 @@ import { getCategories, getProducts } from "@/lib/api";
 import { fetchPublicCategories } from "@/lib/public/catalogue";
 
 export function CatalogPage() {
-  // Start with static data for instant paint, hydrate from Supabase so admin
-  // edits (new categories, renames, images) show up without a hard refresh.
   const [categories, setCategories] = useState(() => getCategories());
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const products = getProducts();
 
   useEffect(() => {
@@ -30,25 +31,38 @@ export function CatalogPage() {
   }, []);
 
   return (
-    <Section className="pt-28 sm:pt-32 lg:pt-36">
-      <Container>
-        <SectionTitle
-          title="Каталог оборудования"
-          description="Стоматологическое оборудование, запасные части, расходные материалы и сопутствующие товары для клиник, кабинетов и лабораторий."
-        />
-        <div className="mt-6">
-          <PriceNotice />
-        </div>
+    <>
+      <MobileFilterDrawer
+        categories={categories}
+        open={mobileFilterOpen}
+        onClose={() => setMobileFilterOpen(false)}
+      />
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-[340px_1fr] lg:items-start">
-          <CatalogCategoryNav categories={categories} />
-
-          <ProductSearch
-            products={products}
-            searchPlaceholder="Поиск по названию, бренду, производителю или категории"
+      <Section className="pt-28 sm:pt-32 lg:pt-36">
+        <Container>
+          <SectionTitle
+            title="Каталог оборудования"
+            description="Стоматологическое оборудование, запасные части, расходные материалы и сопутствующие товары для клиник, кабинетов и лабораторий."
           />
-        </div>
-      </Container>
-    </Section>
+          <div className="mt-5 flex items-center gap-2">
+            <PriceNotice />
+          </div>
+
+          <div className="mt-6">
+            <CatalogQuickCategories categories={categories} />
+          </div>
+
+          <div className="mt-6 grid gap-8 lg:grid-cols-[340px_1fr] lg:items-start">
+            <CatalogCategoryNav categories={categories} />
+
+            <ProductSearch
+              products={products}
+              searchPlaceholder="Поиск по названию, бренду, производителю или категории"
+              onFilterClick={() => setMobileFilterOpen((v) => !v)}
+            />
+          </div>
+        </Container>
+      </Section>
+    </>
   );
 }

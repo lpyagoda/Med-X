@@ -7,6 +7,7 @@ import type { Product } from "@/types/product";
 type ProductSearchProps = {
   emptyDescription?: string;
   emptyTitle?: string;
+  onFilterClick?: () => void;
   products: Product[];
   searchPlaceholder?: string;
 };
@@ -14,6 +15,7 @@ type ProductSearchProps = {
 export function ProductSearch({
   emptyDescription = "Попробуйте изменить запрос или выбрать другую категорию.",
   emptyTitle = "Товары не найдены",
+  onFilterClick,
   products,
   searchPlaceholder,
 }: ProductSearchProps) {
@@ -27,6 +29,7 @@ export function ProductSearch({
     <div>
       <CatalogToolbar
         count={filteredProducts.length}
+        onFilterClick={onFilterClick}
         onQueryChange={setQuery}
         placeholder={searchPlaceholder}
         query={query}

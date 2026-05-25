@@ -106,6 +106,7 @@ body.dark-bg {
 
   html {
     scroll-padding-top: 6rem;
+    overflow-x: hidden;
   }
 
   body {
@@ -478,6 +479,14 @@ body.dark-bg {
 
   50% {
     transform: translateY(-12px);
+  }
+}
+
+@media (max-width: 639px) {
+  .premium-float-subtle,
+  .premium-float-subtle-delayed,
+  .premium-float-subtle-slow {
+    animation: none;
   }
 }
 
