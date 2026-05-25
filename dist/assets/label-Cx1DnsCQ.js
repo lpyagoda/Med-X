@@ -1,0 +1,1 @@
+import{j as r}from"./vendor-react-DVqvQ_me.js";import{b as t}from"./vendor-radix-DT-NuTZz.js";import{s}from"./index-1aN4DqiD.js";function n({className:o,...e}){return r.jsx(t,{className:s("text-sm font-medium text-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70",o),...e})}export{n as A};
