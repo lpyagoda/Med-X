@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useParams, useSearchParams } from "react-router-dom";
 import { BrandSearch } from "@/components/catalog/BrandSearch";
 import { CatalogCategoryNav } from "@/components/catalog/CatalogCategoryNav";
+import { CatalogQuickCategories } from "@/components/catalog/CatalogQuickCategories";
 import { ProductSearch } from "@/components/catalog/ProductSearch";
 import { Breadcrumbs } from "@/components/product/Breadcrumbs";
 import { Container } from "@/components/ui/Container";
@@ -123,7 +124,11 @@ export function CategoryPage() {
           </div>
         </div>
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-[340px_1fr] lg:items-start">
+        <div className="mt-6 lg:hidden">
+          <CatalogQuickCategories categories={categories} activeCategorySlug={categorySlug} />
+        </div>
+
+        <div className="mt-6 grid gap-8 lg:grid-cols-[340px_1fr] lg:items-start">
           <CatalogCategoryNav
             activeCategorySlug={category.slug}
             activeSubcategorySlug={activeSubcategory?.slug}

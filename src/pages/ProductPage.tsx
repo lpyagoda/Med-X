@@ -3,6 +3,7 @@ import { Navigate, useParams } from "react-router-dom";
 import { ProductCharacteristics } from "@/components/product/ProductCharacteristics";
 import { ProductDetails } from "@/components/product/ProductDetails";
 import { ProductHero } from "@/components/product/ProductHero";
+import { ProductOrderPanel } from "@/components/product/ProductOrderPanel";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
@@ -73,9 +74,27 @@ export function ProductPage() {
   return (
     <Section className="pt-24 sm:pt-28 lg:pt-32">
       <Container>
-        <ProductHero product={view} />
+        {/* Desktop: two-column grid spanning the full page */}
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-start">
+          {/* Left column: gallery + chars + description */}
+          <div className="flex flex-col gap-8">
+            <ProductHero product={view} />
+            {/* Chars + description sit under the gallery on desktop */}
+            <div className="hidden lg:flex lg:flex-col lg:gap-8">
+              <ProductCharacteristics characteristics={characteristics} />
+              <ProductDetails
+                description={view.description}
+                shortDescription={view.shortDescription}
+              />
+            </div>
+          </div>
 
-        <div className="mt-10 grid gap-8">
+          {/* Right column: order panel */}
+          <ProductOrderPanel product={view} />
+        </div>
+
+        {/* Mobile: chars + description below order panel */}
+        <div className="mt-8 flex flex-col gap-8 lg:hidden">
           <ProductCharacteristics characteristics={characteristics} />
           <ProductDetails
             description={view.description}
