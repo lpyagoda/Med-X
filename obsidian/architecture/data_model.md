@@ -60,7 +60,8 @@ To be confirmed once we inspect arcadia-meb.ru's `database_schema.sql` (Explore 
 - `slug` text unique
 - `title` text
 - `description` text
-- `image_url` text nullable
+- `image_url` text nullable — фото для CategoryGrid (главная)
+- `icon_url` text nullable — PNG-иконка для CatalogCategoryNav (фильтр каталога). Добавлено миграцией 20260526120000_category_icon.sql
 - `tags` text[] nullable
 - `position` int — for ordering
 - `created_at`, `updated_at` timestamptz

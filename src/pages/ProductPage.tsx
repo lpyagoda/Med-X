@@ -58,12 +58,14 @@ export function ProductPage() {
     };
   }, [slug, staticProduct]);
 
-  if (notFound || (!product && !staticProduct)) {
+  if (notFound) {
     return <Navigate to="/404" replace />;
   }
 
+  // While the Supabase fetch is in flight for a slug not in the static seed,
+  // render a blank full-height area instead of redirecting to /404.
   const view = product ?? staticProduct;
-  if (!view) return null;
+  if (!view) return <div className="min-h-screen" aria-hidden="true" />;
 
   const characteristics = [
     ...(view.brand ? [{ name: "Бренд", value: view.brand }] : []),

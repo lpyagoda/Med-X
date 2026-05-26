@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
-import { useLenis } from "@/lib/useLenis";
 import { Navigate, Route, Routes } from "react-router-dom";
+import { useLenis } from "@/lib/useLenis";
 import { LeadModal } from "@/components/forms/LeadModal";
 import { CartDrawer } from "@/components/layout/CartDrawer";
 import { Footer } from "@/components/layout/Footer";
@@ -94,6 +94,10 @@ const AdminOrderDetailPage = lazy(() =>
 );
 
 function PublicLayout({ children }: { children: React.ReactNode }) {
+  // Lenis smooth-wheel only on the public site. Mounting it at the app root
+  // hijacks wheel events on /admin pages, where the scroll container is an
+  // inner <div overflow-y-auto> Lenis can't drive.
+  useLenis();
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -120,8 +124,6 @@ function PublicLoading() {
 }
 
 export function App() {
-  useLenis();
-
   return (
     <>
       <AdminToaster />

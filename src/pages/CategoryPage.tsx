@@ -12,14 +12,19 @@ import { getBrandSlug, getCategoryBrands } from "@/lib/catalogBrands";
 import {
   getCategories,
   getCategoryBySlug,
-  getProductsByCategory,
+  getProducts,
 } from "@/lib/api";
 import { fetchPublicCategories } from "@/lib/public/catalogue";
+import { readCachedCategories } from "@/lib/public/catalogueCache";
+import { fetchPublicProducts } from "@/lib/public/products";
 
 export function CategoryPage() {
   const { category: categorySlug } = useParams<{ category: string }>();
   const [searchParams] = useSearchParams();
-  const [categories, setCategories] = useState(() => getCategories());
+  const [categories, setCategories] = useState(
+    () => readCachedCategories() ?? getCategories(),
+  );
+  const [allProducts, setAllProducts] = useState(() => getProducts());
 
   useEffect(() => {
     let cancelled = false;
@@ -30,6 +35,14 @@ export function CategoryPage() {
       })
       .catch(() => {
         // Silent fallback to static data
+      });
+    fetchPublicProducts()
+      .then((rows) => {
+        if (cancelled || rows.length === 0) return;
+        setAllProducts(rows);
+      })
+      .catch(() => {
+        // Silent fallback to static products
       });
     return () => {
       cancelled = true;
@@ -51,8 +64,8 @@ export function CategoryPage() {
     (subcategory) => subcategory.slug === activeSubcategorySlug,
   );
   const categoryProducts = useMemo(
-    () => getProductsByCategory(category.slug),
-    [category.slug],
+    () => allProducts.filter((product) => product.categorySlug === category.slug),
+    [allProducts, category.slug],
   );
   const categoryBrands = useMemo(
     () => getCategoryBrands(category.slug, category.title, categoryProducts),

@@ -30,7 +30,7 @@ import {
   updateSubcategory,
 } from "@/lib/admin/categories";
 import { generateUniqueSlug } from "@/lib/admin/slug";
-import { uploadCategoryImage } from "@/lib/admin/storage";
+import { uploadCategoryIcon, uploadCategoryImage } from "@/lib/admin/storage";
 import type { CategoryRow, SubcategoryRow } from "@/lib/admin/types";
 import { cn } from "@/lib/utils";
 
@@ -186,7 +186,14 @@ export function AdminCategoriesPage() {
                       </button>
 
                       <CategoryThumb
-                        imageUrl={node.category.image_url}
+                        kind="image"
+                        url={node.category.image_url}
+                        onUploaded={refetch}
+                        category={node.category}
+                      />
+                      <CategoryThumb
+                        kind="icon"
+                        url={node.category.icon_url}
                         onUploaded={refetch}
                         category={node.category}
                       />
@@ -381,41 +388,58 @@ export function AdminCategoriesPage() {
 }
 
 // ---------------------------------------------------------------------------
-// Category thumbnail with hover-upload
+// Category thumbnail with hover-upload. Used twice per row: once for the
+// home-page photo (kind="image", any image format) and once for the catalog
+// filter icon (kind="icon", PNG only — site renders it as <img>).
 // ---------------------------------------------------------------------------
 
+type ThumbKind = "image" | "icon";
+
 function CategoryThumb({
-  imageUrl,
+  kind,
+  url,
   category,
   onUploaded,
 }: {
-  imageUrl: string | null;
+  kind: ThumbKind;
+  url: string | null;
   category: CategoryRow;
   onUploaded: () => Promise<void> | void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const isIcon = kind === "icon";
+  const label = isIcon ? "Иконка (PNG для фильтра)" : "Фото на главной";
 
   async function handleFile(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
-    if (!file.type.startsWith("image/")) {
+    if (isIcon) {
+      if (file.type !== "image/png") {
+        toast.error("Иконка должна быть PNG с прозрачным фоном");
+        if (inputRef.current) inputRef.current.value = "";
+        return;
+      }
+    } else if (!file.type.startsWith("image/")) {
       toast.error("Только изображения");
       return;
     }
     setUploading(true);
     try {
-      const { publicUrl } = await uploadCategoryImage(file, category.title);
+      const { publicUrl } = isIcon
+        ? await uploadCategoryIcon(file, category.title)
+        : await uploadCategoryImage(file, category.title);
       await updateCategory(category.id, {
         slug: category.slug,
         title: category.title,
         description: category.description,
-        image_url: publicUrl,
+        image_url: isIcon ? category.image_url : publicUrl,
+        icon_url: isIcon ? publicUrl : category.icon_url,
         tags: category.tags,
         position: category.position,
         is_active: category.is_active,
       });
-      toast.success("Картинка обновлена");
+      toast.success(isIcon ? "Иконка обновлена" : "Картинка обновлена");
       await onUploaded();
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : "Не удалось загрузить");
@@ -430,7 +454,7 @@ function CategoryThumb({
       <input
         ref={inputRef}
         type="file"
-        accept="image/*"
+        accept={isIcon ? "image/png" : "image/*"}
         className="sr-only"
         onChange={handleFile}
         disabled={uploading}
@@ -438,15 +462,22 @@ function CategoryThumb({
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="group/thumb relative h-12 w-12 overflow-hidden rounded-lg border border-admin-border bg-admin-bg"
-        aria-label="Загрузить картинку категории"
+        className={cn(
+          "group/thumb relative h-12 w-12 overflow-hidden rounded-lg border border-admin-border",
+          isIcon ? "bg-white" : "bg-admin-bg",
+        )}
+        aria-label={label}
+        title={label}
         disabled={uploading}
       >
-        {imageUrl ? (
+        {url ? (
           <img
-            src={imageUrl}
+            src={url}
             alt=""
-            className="h-full w-full object-cover"
+            className={cn(
+              "h-full w-full",
+              isIcon ? "object-contain p-1.5" : "object-cover",
+            )}
             loading="lazy"
           />
         ) : (
@@ -484,6 +515,8 @@ function CategoryDialog({
   const [description, setDescription] = useState(category?.description ?? "");
   const [position, setPosition] = useState((category?.position ?? 0).toString());
   const [isActive, setIsActive] = useState(category?.is_active ?? true);
+  const [imageUrl, setImageUrl] = useState<string | null>(category?.image_url ?? null);
+  const [iconUrl, setIconUrl] = useState<string | null>(category?.icon_url ?? null);
   const [saving, setSaving] = useState(false);
 
   async function save() {
@@ -502,7 +535,8 @@ function CategoryDialog({
         slug,
         title: title.trim(),
         description: description.trim(),
-        image_url: category?.image_url ?? null,
+        image_url: imageUrl,
+        icon_url: iconUrl,
         tags: category?.tags ?? [],
         position: Number(position) || 0,
         is_active: isActive,
@@ -567,9 +601,20 @@ function CategoryDialog({
               onCheckedChange={setIsActive}
             />
 
-            <p className="text-xs text-admin-muted-fg">
-              Картинка категории загружается через клик по миниатюре в списке.
-            </p>
+            <div className="grid grid-cols-2 gap-3">
+              <CategoryAssetField
+                kind="image"
+                title={title || category?.title || "draft"}
+                url={imageUrl}
+                onChange={setImageUrl}
+              />
+              <CategoryAssetField
+                kind="icon"
+                title={title || category?.title || "draft"}
+                url={iconUrl}
+                onChange={setIconUrl}
+              />
+            </div>
           </div>
 
           <div className="mt-6 flex justify-end gap-2">
@@ -686,6 +731,115 @@ function SubcategoryDialog({
   );
 }
 
+
+// Preview + upload + clear, used inside CategoryDialog. Does NOT save to the
+// database on its own — the parent dialog persists the chosen URL when the
+// user clicks "Сохранить". The asset itself is uploaded to storage right
+// away (so cancelling the dialog leaves an orphan blob, but that's cheap and
+// simpler than tracking pending blobs).
+function CategoryAssetField({
+  kind,
+  title,
+  url,
+  onChange,
+}: {
+  kind: ThumbKind;
+  title: string;
+  url: string | null;
+  onChange: (next: string | null) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const isIcon = kind === "icon";
+  const label = isIcon ? "Иконка фильтра (PNG)" : "Фото на главной";
+  const hint = isIcon ? "PNG с прозрачным фоном" : "Любой формат, до ~10 МБ";
+
+  async function handleFile(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (isIcon) {
+      if (file.type !== "image/png") {
+        toast.error("Иконка должна быть PNG с прозрачным фоном");
+        if (inputRef.current) inputRef.current.value = "";
+        return;
+      }
+    } else if (!file.type.startsWith("image/")) {
+      toast.error("Только изображения");
+      return;
+    }
+    setUploading(true);
+    try {
+      const { publicUrl } = isIcon
+        ? await uploadCategoryIcon(file, title)
+        : await uploadCategoryImage(file, title);
+      onChange(publicUrl);
+      toast.success("Файл загружен — не забудьте «Сохранить»");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Не удалось загрузить");
+    } finally {
+      setUploading(false);
+      if (inputRef.current) inputRef.current.value = "";
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <AdminLabel>{label}</AdminLabel>
+      <div
+        className={cn(
+          "relative flex h-24 items-center justify-center overflow-hidden rounded-lg border border-admin-border",
+          isIcon ? "bg-white" : "bg-admin-bg",
+        )}
+      >
+        {url ? (
+          <img
+            src={url}
+            alt=""
+            className={cn(
+              "h-full w-full",
+              isIcon ? "object-contain p-3" : "object-cover",
+            )}
+            loading="lazy"
+          />
+        ) : (
+          <ImageOff className="h-6 w-6 text-admin-muted-fg" />
+        )}
+      </div>
+      <input
+        ref={inputRef}
+        type="file"
+        accept={isIcon ? "image/png" : "image/*"}
+        className="sr-only"
+        onChange={handleFile}
+        disabled={uploading}
+      />
+      <div className="flex items-center gap-2">
+        <AdminButton
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() => inputRef.current?.click()}
+          disabled={uploading}
+        >
+          <Upload className="h-3.5 w-3.5" />
+          {uploading ? "Загружаем…" : url ? "Заменить" : "Загрузить"}
+        </AdminButton>
+        {url ? (
+          <AdminButton
+            type="button"
+            size="sm"
+            variant="ghost"
+            onClick={() => onChange(null)}
+            disabled={uploading}
+          >
+            Удалить
+          </AdminButton>
+        ) : null}
+      </div>
+      <p className="text-[11px] text-admin-muted-fg">{hint}</p>
+    </div>
+  );
+}
 
 function CountBadge({ value }: { value: number }) {
   return (

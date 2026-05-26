@@ -73,15 +73,13 @@ export function ProductCard({ product, variant = "default" }: ProductCardProps) 
           </p>
         </header>
 
-        <div className="pointer-events-none flex flex-1 items-center justify-center py-8">
-          <div className="relative h-64 w-80 transition-transform duration-300 group-hover:-translate-y-1">
-            <img
-              alt={product.title}
-              className="absolute inset-0 h-full w-full object-contain"
-              src={product.image}
-              loading="lazy"
-            />
-          </div>
+        <div className="pointer-events-none relative flex-1 overflow-hidden transition-transform duration-300 group-hover:-translate-y-1">
+          <img
+            alt={product.title}
+            className="absolute inset-0 h-full w-full object-cover"
+            src={product.image}
+            loading="lazy"
+          />
         </div>
 
         <footer className="relative z-10">
@@ -108,7 +106,7 @@ export function ProductCard({ product, variant = "default" }: ProductCardProps) 
     >
       <CardOverlay product={product} />
 
-      <div className="pointer-events-none relative flex aspect-[4/3] items-center justify-center bg-[linear-gradient(145deg,#f8fcff,#eef7fb)] px-8">
+      <div className="pointer-events-none relative aspect-[4/3] overflow-hidden bg-[linear-gradient(145deg,#f8fcff,#eef7fb)]">
         <div className="absolute left-4 right-4 top-4 z-10 flex flex-wrap gap-2">
           {categoryLabel ? (
             <PillBadge className="bg-[color-mix(in_srgb,var(--accent)_13%,white)] text-primary">
@@ -120,14 +118,12 @@ export function ProductCard({ product, variant = "default" }: ProductCardProps) 
           ) : null}
         </div>
 
-        <div className="relative h-56 w-full max-w-80 transition-transform duration-300 group-hover:-translate-y-1">
-          <img
-            alt={product.title}
-            className="absolute inset-0 h-full w-full object-contain"
-            src={product.image}
-            loading="lazy"
-          />
-        </div>
+        <img
+          alt={product.title}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:-translate-y-1"
+          src={product.image}
+          loading="lazy"
+        />
       </div>
 
       <div className="pointer-events-none flex flex-1 flex-col p-6">

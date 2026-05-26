@@ -10,12 +10,16 @@ import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { getCategories, getProducts } from "@/lib/api";
 import { fetchPublicCategories } from "@/lib/public/catalogue";
+import { readCachedCategories } from "@/lib/public/catalogueCache";
+import { fetchPublicProducts } from "@/lib/public/products";
 
 export function CatalogPage() {
   const { category: activeCategorySlug } = useParams<{ category?: string }>();
-  const [categories, setCategories] = useState(() => getCategories());
+  const [categories, setCategories] = useState(
+    () => readCachedCategories() ?? getCategories(),
+  );
+  const [products, setProducts] = useState(() => getProducts());
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
-  const products = getProducts();
 
   useEffect(() => {
     let cancelled = false;
@@ -26,6 +30,14 @@ export function CatalogPage() {
       })
       .catch(() => {
         // Fall back to static catalogue silently.
+      });
+    fetchPublicProducts()
+      .then((rows) => {
+        if (cancelled || rows.length === 0) return;
+        setProducts(rows);
+      })
+      .catch(() => {
+        // Silent fallback to static products
       });
     return () => {
       cancelled = true;

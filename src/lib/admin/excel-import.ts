@@ -454,6 +454,7 @@ export async function runImport(plan: ImportPlan): Promise<ImportRunResult> {
       title,
       description: "",
       image_url: null,
+      icon_url: null,
       tags: [],
       position: categoryByTitle.size,
       is_active: true,

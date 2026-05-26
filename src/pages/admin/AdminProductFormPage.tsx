@@ -677,6 +677,7 @@ export function AdminProductFormPage() {
               title: name,
               description: "",
               image_url: null,
+              icon_url: null,
               tags: [],
               position: categories.length,
               is_active: true,

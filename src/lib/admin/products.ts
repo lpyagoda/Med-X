@@ -34,7 +34,8 @@ export async function listProducts(
   let query = supabase
     .from("products")
     .select(PRODUCT_LIST_SELECT, { count: "exact" })
-    .order("position", { ascending: true });
+    .order("position", { ascending: true })
+    .order("created_at", { ascending: false });
 
   if (args.search?.trim()) {
     const term = args.search.trim();

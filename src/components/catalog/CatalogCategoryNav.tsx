@@ -28,7 +28,9 @@ type CategoryGroupProps = {
 function CategoryGroup({ category, isActiveCategory, activeSubcategorySlug, defaultExpanded }: CategoryGroupProps) {
   const [expanded, setExpanded] = useState(defaultExpanded);
   const hasSubcategories = !!category.subcategories?.length;
-  const icon = categoryIcons[category.slug];
+  // Prefer the admin-uploaded PNG icon; fall back to the hard-coded inline SVG
+  // (which still respects currentColor on hover/active).
+  const fallbackIcon = categoryIcons[category.slug];
   const isHighlighted = isActiveCategory || expanded;
 
   return (
@@ -57,7 +59,17 @@ function CategoryGroup({ category, isActiveCategory, activeSubcategorySlug, defa
             ? "bg-primary/15 text-primary"
             : "bg-[#f0f3f7] text-[#7a8fa6] group-hover:bg-primary/10 group-hover:text-primary",
         )}>
-          {icon}
+          {category.icon ? (
+            <img
+              src={category.icon}
+              alt=""
+              aria-hidden="true"
+              className="h-5 w-5 object-contain"
+              loading="lazy"
+            />
+          ) : (
+            fallbackIcon
+          )}
         </span>
 
         {/* Title */}

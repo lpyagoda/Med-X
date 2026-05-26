@@ -11,13 +11,16 @@ import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { getCategories, getProducts } from "@/lib/api";
 import { fetchPublicCategories } from "@/lib/public/catalogue";
+import { readCachedCategories } from "@/lib/public/catalogueCache";
+import { fetchPublicProducts } from "@/lib/public/products";
 import { useParallax } from "@/lib/useParallax";
 
 export function HomePage() {
-  // First paint: static data (instant). Then hydrate from Supabase so admin-
-  // uploaded category images appear without a network round-trip blocking render.
-  const [categories, setCategories] = useState(() => getCategories());
-  const products = getProducts();
+  // First paint: prefer the cached Supabase result (so admin-uploaded photos
+  // appear instantly on reload), then fall back to static data. Always
+  // re-fetch in the background to pick up freshly edited categories.
+  const [categories, setCategories] = useState(() => readCachedCategories() ?? getCategories());
+  const [products, setProducts] = useState(() => getProducts());
   const popularProducts = products.slice(0, 6);
   const gridRef = useParallax(0.1);
 
@@ -30,6 +33,14 @@ export function HomePage() {
       })
       .catch(() => {
         // Public Supabase fetch failed (network/rls) — silently keep static data.
+      });
+    fetchPublicProducts()
+      .then((rows) => {
+        if (cancelled || rows.length === 0) return;
+        setProducts(rows);
+      })
+      .catch(() => {
+        // Silent fallback to static products
       });
     return () => {
       cancelled = true;

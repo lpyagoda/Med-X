@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Download, Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { AdminButton } from "@/components/admin/ui/button";
 import { AdminInput } from "@/components/admin/ui/input";
@@ -17,6 +17,8 @@ import {
 import { exportProductsToXlsx } from "@/lib/admin/products-export";
 import type { CategoryRow, ProductWithJoins } from "@/lib/admin/types";
 
+const PAGE_SIZE = 50;
+
 export function AdminProductsListPage() {
   const navigate = useNavigate();
   const [categories, setCategories] = useState<CategoryRow[]>([]);
@@ -25,6 +27,7 @@ export function AdminProductsListPage() {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [categoryId, setCategoryId] = useState<string>("");
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pendingDelete, setPendingDelete] = useState<ProductWithJoins | null>(null);
@@ -53,7 +56,8 @@ export function AdminProductsListPage() {
         const result = await listProducts({
           search: debouncedSearch || undefined,
           categoryId: categoryId || undefined,
-          limit: 100,
+          limit: PAGE_SIZE,
+          offset: (page - 1) * PAGE_SIZE,
         });
         setProducts(result.rows);
         setTotal(result.total);
@@ -64,12 +68,20 @@ export function AdminProductsListPage() {
         setLoading(false);
       }
     },
-    [debouncedSearch, categoryId],
+    [debouncedSearch, categoryId, page],
   );
 
   useEffect(() => {
     void fetchProducts();
   }, [fetchProducts]);
+
+  // Reset to page 1 whenever the filter shape changes so the user doesn't
+  // land on an empty page after narrowing the result set.
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, categoryId]);
+
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   async function confirmDelete() {
     if (!pendingDelete) return;
@@ -266,6 +278,39 @@ export function AdminProductsListPage() {
               </tbody>
             </table>
           </div>
+
+          {totalPages > 1 ? (
+            <div className="flex items-center justify-between gap-3 border-t border-admin-border px-4 py-3 text-sm">
+              <span className="text-admin-muted-fg">
+                Страница {page} из {totalPages} · показано{" "}
+                {products.length === 0 ? 0 : (page - 1) * PAGE_SIZE + 1}
+                {"–"}
+                {(page - 1) * PAGE_SIZE + products.length} из {total}
+              </span>
+              <div className="flex items-center gap-1">
+                <AdminButton
+                  variant="outline"
+                  size="icon"
+                  disabled={page <= 1 || loading}
+                  onClick={() => setPage((current) => Math.max(1, current - 1))}
+                  aria-label="Предыдущая страница"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </AdminButton>
+                <AdminButton
+                  variant="outline"
+                  size="icon"
+                  disabled={page >= totalPages || loading}
+                  onClick={() =>
+                    setPage((current) => Math.min(totalPages, current + 1))
+                  }
+                  aria-label="Следующая страница"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </AdminButton>
+              </div>
+            </div>
+          ) : null}
         </div>
       </main>
 

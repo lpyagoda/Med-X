@@ -43,3 +43,8 @@ Conventions: each `.md` file is a self-contained note with frontmatter (`name`, 
 - [2026-05-22 - Home dark rays background](changelog/2026-05-22_home_dark_rays.md)
 - [2026-05-22 - Home grid background](changelog/2026-05-22_home_grid_background.md) - continuous grid behind home categories/DURR/popular blocks
 - [2026-05-22 — Catalog: режим брендов внутри категории](changelog/2026-05-22_catalog_brand_mode.md)
+- [2026-05-26 — Связка админка↔сайт: сортировка, скролл в /admin, публичные товары из Supabase](changelog/2026-05-26_admin_site_catalog_sync.md)
+- [2026-05-26 — Иконка категории в админке (categories.icon_url) + фото на главной из БД](changelog/2026-05-26_category_icons_admin.md)
+- [2026-05-26 — Анти-мигание фото категорий (localStorage кэш) + UI фото/иконки в окне редактирования](changelog/2026-05-26_category_assets_dialog_and_cache.md)
+- [2026-05-26 — Релевантный поиск товаров + пагинация (20 на сайте, 50 в админке)](changelog/2026-05-26_search_and_pagination.md)
+- [2026-05-26 — Сокращение ИП «Литвиненко Р.К.» + новый SVG favicon как основной](changelog/2026-05-26_legal_shortname_and_favicon.md)

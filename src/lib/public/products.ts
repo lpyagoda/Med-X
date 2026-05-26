@@ -98,6 +98,24 @@ async function hydrateProduct(productRow: ProductRow): Promise<Product> {
   return rowToProduct(productRow, characteristics, images);
 }
 
+/**
+ * Public list of active products, sorted the same way the admin sees them
+ * (position asc, then newest first as a deterministic tiebreak). Returns
+ * lightweight products — galleries/characteristics are hydrated only on
+ * the product detail page.
+ */
+export async function fetchPublicProducts(): Promise<Product[]> {
+  const { data, error } = await supabase
+    .from("products")
+    .select(PUBLIC_SELECT)
+    .eq("is_active", true)
+    .order("position", { ascending: true })
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return ((data ?? []) as unknown as ProductRow[]).map((row) => rowToProduct(row, [], []));
+}
+
 export async function fetchPublicProductBySlug(slug: string): Promise<Product | null> {
   const { data: productData, error: productError } = await supabase
     .from("products")

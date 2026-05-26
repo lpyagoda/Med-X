@@ -10,6 +10,7 @@ export type Category = {
   description: string;
   id: string;
   image?: string;
+  icon?: string;
   slug: string;
   subcategories?: Subcategory[];
   tags?: string[];

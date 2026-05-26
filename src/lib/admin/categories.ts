@@ -6,6 +6,7 @@ export type CategoryInput = {
   title: string;
   description: string;
   image_url: string | null;
+  icon_url: string | null;
   tags: string[];
   position: number;
   is_active: boolean;

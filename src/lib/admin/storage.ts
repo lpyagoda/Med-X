@@ -46,6 +46,27 @@ export async function uploadCategoryImage(
   return { path, publicUrl: data.publicUrl };
 }
 
+export async function uploadCategoryIcon(
+  file: File,
+  source: string,
+): Promise<UploadResult> {
+  if (file.type !== "image/png") {
+    throw new Error("Иконка должна быть PNG с прозрачным фоном");
+  }
+  const safePrefix = slugify(source) || "untitled";
+  const path = `categories/icons/${safePrefix}/${Date.now()}.png`;
+
+  const { error: uploadError } = await supabase.storage.from(BUCKET).upload(path, file, {
+    cacheControl: "3600",
+    upsert: true,
+    contentType: "image/png",
+  });
+  if (uploadError) throw uploadError;
+
+  const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
+  return { path, publicUrl: data.publicUrl };
+}
+
 export async function deleteProductImage(publicUrl: string | null) {
   if (!publicUrl) return;
   const marker = `/storage/v1/object/public/${BUCKET}/`;

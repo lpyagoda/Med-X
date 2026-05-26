@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase/client";
+import { writeCachedCategories } from "@/lib/public/catalogueCache";
 import type { Category, Subcategory } from "@/types/category";
 
 type CategoryRow = {
@@ -7,6 +8,7 @@ type CategoryRow = {
   title: string;
   description: string;
   image_url: string | null;
+  icon_url: string | null;
   tags: string[] | null;
   position: number;
 };
@@ -29,7 +31,7 @@ export async function fetchPublicCategories(): Promise<Category[]> {
   const [categoriesResult, subcategoriesResult] = await Promise.all([
     supabase
       .from("categories")
-      .select("id, slug, title, description, image_url, tags, position")
+      .select("id, slug, title, description, image_url, icon_url, tags, position")
       .order("position", { ascending: true }),
     supabase
       .from("subcategories")
@@ -43,12 +45,13 @@ export async function fetchPublicCategories(): Promise<Category[]> {
   const categories = (categoriesResult.data ?? []) as CategoryRow[];
   const subcategories = (subcategoriesResult.data ?? []) as SubcategoryRow[];
 
-  return categories.map((row) => ({
+  const result = categories.map((row) => ({
     id: row.id,
     slug: row.slug,
     title: row.title,
     description: row.description,
     image: row.image_url ?? undefined,
+    icon: row.icon_url ?? undefined,
     tags: row.tags ?? undefined,
     subcategories: subcategories
       .filter((sub) => sub.category_id === row.id)
@@ -60,4 +63,10 @@ export async function fetchPublicCategories(): Promise<Category[]> {
         description: sub.description ?? undefined,
       })),
   }));
+
+  // Persist for the next reload so the first paint already has admin-uploaded
+  // photos/icons instead of flashing the static /images/category.jpg fallback.
+  writeCachedCategories(result);
+
+  return result;
 }
