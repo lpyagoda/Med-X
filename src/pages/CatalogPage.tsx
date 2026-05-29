@@ -41,11 +41,13 @@ export function CatalogPage() {
       });
     fetchPublicProducts()
       .then((rows) => {
-        if (cancelled || rows.length === 0) return;
+        if (cancelled) return;
+        // A resolved fetch is authoritative — use it even when empty (e.g. the
+        // admin hid every product), otherwise the static seed leaks back in.
         setProducts(rows);
       })
       .catch(() => {
-        // Silent fallback to static products
+        // Network/RLS error only — keep the static products as a fallback.
       });
     fetchPublicBrands()
       .then((rows) => {
