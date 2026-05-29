@@ -48,3 +48,4 @@ Conventions: each `.md` file is a self-contained note with frontmatter (`name`, 
 - [2026-05-26 — Анти-мигание фото категорий (localStorage кэш) + UI фото/иконки в окне редактирования](changelog/2026-05-26_category_assets_dialog_and_cache.md)
 - [2026-05-26 — Релевантный поиск товаров + пагинация (20 на сайте, 50 в админке)](changelog/2026-05-26_search_and_pagination.md)
 - [2026-05-26 — Сокращение ИП «Литвиненко Р.К.» + новый SVG favicon как основной](changelog/2026-05-26_legal_shortname_and_favicon.md)
+- [2026-05-29 — Бренды (таблица+FK), админка брендов, фильтр+страница брендов, расширение админки товаров, тёмный hero, фикс загрузки фото](changelog/2026-05-29_brands_admin_catalog.md)

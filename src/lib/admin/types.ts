@@ -24,6 +24,17 @@ export type SubcategoryRow = {
   is_active: boolean;
 };
 
+export type BrandRow = {
+  id: string;
+  slug: string;
+  name: string;
+  manufacturer: string;
+  logo_url: string | null;
+  description: string;
+  position: number;
+  is_active: boolean;
+};
+
 export type ProductAvailability = "in-stock" | "on-order";
 
 export type ProductRow = {
@@ -40,6 +51,7 @@ export type ProductRow = {
   description: string;
   category_id: string;
   subcategory_id: string | null;
+  brand_id: string | null;
   availability: ProductAvailability;
   availability_label: string | null;
   position: number;
@@ -73,6 +85,7 @@ export type ProductImageInput = {
 export type ProductWithJoins = ProductRow & {
   category: { id: string; slug: string; title: string } | null;
   subcategory: { id: string; slug: string; title: string } | null;
+  brandRef: { id: string; slug: string; name: string; manufacturer: string } | null;
 };
 
 export type ProductInput = {
@@ -87,6 +100,7 @@ export type ProductInput = {
   description: string;
   category_id: string;
   subcategory_id: string | null;
+  brand_id: string | null;
   availability: ProductAvailability;
   availability_label: string | null;
   is_active: boolean;

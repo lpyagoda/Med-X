@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 import { CatalogCategoryNav } from "@/components/catalog/CatalogCategoryNav";
 import { CatalogQuickCategories } from "@/components/catalog/CatalogQuickCategories";
+import { CatalogBrandFilter } from "@/components/catalog/CatalogBrandFilter";
 import { MobileFilterDrawer } from "@/components/catalog/MobileFilterDrawer";
 import { PriceNotice } from "@/components/catalog/PriceNotice";
 import { ProductSearch } from "@/components/catalog/ProductSearch";
@@ -9,17 +10,24 @@ import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { getCategories, getProducts } from "@/lib/api";
+import { getBrandSlug } from "@/lib/catalogBrands";
 import { fetchPublicCategories } from "@/lib/public/catalogue";
 import { readCachedCategories } from "@/lib/public/catalogueCache";
 import { fetchPublicProducts } from "@/lib/public/products";
+import { fetchPublicBrands } from "@/lib/public/brands";
+import type { Brand } from "@/types/brand";
 
 export function CatalogPage() {
   const { category: activeCategorySlug } = useParams<{ category?: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [categories, setCategories] = useState(
     () => readCachedCategories() ?? getCategories(),
   );
   const [products, setProducts] = useState(() => getProducts());
+  const [brands, setBrands] = useState<Brand[]>([]);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+
+  const activeBrandSlug = searchParams.get("brand") ?? "";
 
   useEffect(() => {
     let cancelled = false;
@@ -39,10 +47,44 @@ export function CatalogPage() {
       .catch(() => {
         // Silent fallback to static products
       });
+    fetchPublicBrands()
+      .then((rows) => {
+        if (cancelled) return;
+        setBrands(rows);
+      })
+      .catch(() => {
+        // No brands table / network — hide the brand filter silently.
+      });
     return () => {
       cancelled = true;
     };
   }, []);
+
+  const activeBrand = brands.find((brand) => brand.slug === activeBrandSlug);
+
+  // Filter by brand. Brands carry a DB slug; products only carry brand text, so
+  // we match either on that slug (derived from the product's brand name) or on
+  // the brand name directly — robust for seeded and admin-created brands alike.
+  const visibleProducts = useMemo(() => {
+    if (!activeBrand) return products;
+    const targetName = activeBrand.name.trim().toLowerCase();
+    return products.filter(
+      (product) =>
+        getBrandSlug(product.brand) === activeBrand.slug ||
+        product.brand.trim().toLowerCase() === targetName,
+    );
+  }, [products, activeBrand]);
+
+  function selectBrand(slug: string) {
+    setSearchParams(
+      (params) => {
+        if (slug) params.set("brand", slug);
+        else params.delete("brand");
+        return params;
+      },
+      { replace: true },
+    );
+  }
 
   return (
     <>
@@ -68,13 +110,27 @@ export function CatalogPage() {
             <CatalogQuickCategories categories={categories} activeCategorySlug={activeCategorySlug} />
           </div>
 
+          {brands.length > 0 ? (
+            <CatalogBrandFilter
+              className="mt-6"
+              brands={brands}
+              activeBrandSlug={activeBrandSlug}
+              onSelect={selectBrand}
+            />
+          ) : null}
+
           <div className="mt-6 grid gap-8 lg:grid-cols-[340px_1fr] lg:items-start">
             <CatalogCategoryNav categories={categories} />
 
             <ProductSearch
-              products={products}
+              products={visibleProducts}
               searchPlaceholder="Поиск по названию, бренду, производителю или категории"
               onFilterClick={() => setMobileFilterOpen((v) => !v)}
+              emptyDescription={
+                activeBrand
+                  ? `В каталоге пока нет товаров бренда «${activeBrand.name}» по этому запросу. Снимите фильтр по бренду или отправьте заявку на подбор.`
+                  : undefined
+              }
             />
           </div>
         </Container>

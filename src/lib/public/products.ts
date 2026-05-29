@@ -16,6 +16,13 @@ type ProductRow = {
   availability_label: string | null;
   category: { id: string; slug: string; title: string } | null;
   subcategory: { id: string; slug: string; title: string } | null;
+  brandRef: {
+    id: string;
+    slug: string;
+    name: string;
+    manufacturer: string;
+    logo_url: string | null;
+  } | null;
 };
 
 type CharacteristicRow = {
@@ -36,7 +43,8 @@ const PUBLIC_SELECT = `
   id, slug, title, brand, manufacturer, image_url, price, price_label,
   short_description, description, availability, availability_label,
   category:categories!products_category_id_fkey ( id, slug, title ),
-  subcategory:subcategories!products_subcategory_id_fkey ( id, slug, title )
+  subcategory:subcategories!products_subcategory_id_fkey ( id, slug, title ),
+  brandRef:brands!products_brand_id_fkey ( id, slug, name, manufacturer, logo_url )
 `;
 
 function rowToProduct(
@@ -54,12 +62,19 @@ function rowToProduct(
 
   const price = row.price == null ? null : Number(row.price);
 
+  // Prefer the canonical values from the linked brand record (admin manages
+  // them in one place); fall back to the denormalised text on the product.
+  const brandName = row.brandRef?.name || row.brand;
+  const manufacturer = row.brandRef?.manufacturer || row.manufacturer;
+
   return {
     id: row.id,
     slug: row.slug,
     title: row.title,
-    brand: row.brand,
-    manufacturer: row.manufacturer,
+    brand: brandName,
+    brandSlug: row.brandRef?.slug,
+    brandLogo: row.brandRef?.logo_url ?? null,
+    manufacturer,
     image: main?.url ?? row.image_url ?? "",
     images: productImages,
     price: Number.isFinite(price as number) ? (price as number) : null,

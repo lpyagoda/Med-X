@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase/client";
+import { generateUniqueSlug } from "@/lib/admin/slug";
 import type {
   ProductCharacteristicRow,
   ProductImageRow,
@@ -10,12 +11,20 @@ import type {
 const PRODUCT_LIST_SELECT = `
   *,
   category:categories!products_category_id_fkey ( id, slug, title ),
-  subcategory:subcategories!products_subcategory_id_fkey ( id, slug, title )
+  subcategory:subcategories!products_subcategory_id_fkey ( id, slug, title ),
+  brandRef:brands!products_brand_id_fkey ( id, slug, name, manufacturer )
 `;
+
+export type ProductSortKey = "position" | "title" | "brand" | "price" | "created_at";
 
 export type ListProductsArgs = {
   search?: string;
   categoryId?: string;
+  brandId?: string;
+  availability?: "in-stock" | "on-order";
+  status?: "active" | "hidden";
+  sortKey?: ProductSortKey;
+  sortAsc?: boolean;
   limit?: number;
   offset?: number;
 };
@@ -33,9 +42,19 @@ export async function listProducts(
 
   let query = supabase
     .from("products")
-    .select(PRODUCT_LIST_SELECT, { count: "exact" })
-    .order("position", { ascending: true })
-    .order("created_at", { ascending: false });
+    .select(PRODUCT_LIST_SELECT, { count: "exact" });
+
+  // Sorting. Default keeps the historical order (position asc, newest first).
+  if (args.sortKey && args.sortKey !== "position") {
+    query = query.order(args.sortKey, {
+      ascending: args.sortAsc ?? true,
+      nullsFirst: false,
+    });
+  } else {
+    query = query
+      .order("position", { ascending: args.sortAsc ?? true })
+      .order("created_at", { ascending: false });
+  }
 
   if (args.search?.trim()) {
     const term = args.search.trim();
@@ -45,6 +64,15 @@ export async function listProducts(
   }
   if (args.categoryId) {
     query = query.eq("category_id", args.categoryId);
+  }
+  if (args.brandId) {
+    query = query.eq("brand_id", args.brandId);
+  }
+  if (args.availability) {
+    query = query.eq("availability", args.availability);
+  }
+  if (args.status) {
+    query = query.eq("is_active", args.status === "active");
   }
 
   const { data, count, error } = await query.range(offset, offset + limit - 1);
@@ -226,4 +254,58 @@ export async function toggleProductActive(
     .update({ is_active: isActive })
     .eq("id", id);
   if (error) throw error;
+}
+
+export async function bulkSetProductsActive(
+  ids: string[],
+  isActive: boolean,
+): Promise<void> {
+  if (ids.length === 0) return;
+  const { error } = await supabase
+    .from("products")
+    .update({ is_active: isActive })
+    .in("id", ids);
+  if (error) throw error;
+}
+
+export async function bulkDeleteProducts(ids: string[]): Promise<void> {
+  if (ids.length === 0) return;
+  const { error } = await supabase.from("products").delete().in("id", ids);
+  if (error) throw error;
+}
+
+/**
+ * Deep-copies a product (фото + характеристики) into a new draft. The copy is
+ * created hidden (is_active=false) with a "— копия" suffix so it never leaks to
+ * the public site before the admin reviews it. Returns the new product row.
+ */
+export async function duplicateProduct(id: string): Promise<ProductRow> {
+  const { product, characteristics, images } = await getProductWithDetails(id);
+  const slug = await generateUniqueSlug({
+    table: "products",
+    source: `${product.title} kopiya`,
+  });
+  return createProduct({
+    slug,
+    title: `${product.title} — копия`,
+    brand: product.brand,
+    manufacturer: product.manufacturer,
+    image_url: product.image_url,
+    price: product.price,
+    price_label: product.price_label,
+    short_description: product.short_description,
+    description: product.description,
+    category_id: product.category_id,
+    subcategory_id: product.subcategory_id,
+    brand_id: product.brand_id,
+    availability: product.availability,
+    availability_label: product.availability_label,
+    is_active: false,
+    characteristics: characteristics.map((row) => ({ name: row.name, value: row.value })),
+    images: images.map((row, index) => ({
+      url: row.url,
+      is_main: row.is_main,
+      position: index,
+    })),
+  });
 }

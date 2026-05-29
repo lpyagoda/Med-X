@@ -16,6 +16,9 @@ import { HomePage } from "@/pages/HomePage";
 const CatalogPage = lazy(() =>
   import("@/pages/CatalogPage").then((m) => ({ default: m.CatalogPage })),
 );
+const BrandsPage = lazy(() =>
+  import("@/pages/BrandsPage").then((m) => ({ default: m.BrandsPage })),
+);
 const CategoryPage = lazy(() =>
   import("@/pages/CategoryPage").then((m) => ({ default: m.CategoryPage })),
 );
@@ -75,6 +78,11 @@ const AdminProductsImportPage = lazy(() =>
 const AdminCategoriesPage = lazy(() =>
   import("@/pages/admin/AdminCategoriesPage").then((mod) => ({
     default: mod.AdminCategoriesPage,
+  })),
+);
+const AdminBrandsPage = lazy(() =>
+  import("@/pages/admin/AdminBrandsPage").then((mod) => ({
+    default: mod.AdminBrandsPage,
   })),
 );
 const AdminLeadsPage = lazy(() =>
@@ -148,6 +156,7 @@ export function App() {
             <Route path="products/import" element={<AdminProductsImportPage />} />
             <Route path="products/:id" element={<AdminProductFormPage />} />
             <Route path="categories" element={<AdminCategoriesPage />} />
+            <Route path="brands" element={<AdminBrandsPage />} />
             <Route path="orders" element={<AdminOrdersListPage />} />
             <Route path="orders/:id" element={<AdminOrderDetailPage />} />
             <Route path="leads" element={<AdminLeadsPage />} />
@@ -168,6 +177,14 @@ export function App() {
               element={
                 <PublicLayout>
                   <CatalogPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/brands"
+              element={
+                <PublicLayout>
+                  <BrandsPage />
                 </PublicLayout>
               }
             />

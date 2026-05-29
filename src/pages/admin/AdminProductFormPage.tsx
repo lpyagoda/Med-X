@@ -27,6 +27,7 @@ import {
   listCategories,
   listSubcategories,
 } from "@/lib/admin/categories";
+import { createBrand, listBrands } from "@/lib/admin/brands";
 import { formatPriceLabel, parsePriceInput } from "@/lib/admin/price";
 import {
   createProduct,
@@ -34,8 +35,13 @@ import {
   updateProduct,
 } from "@/lib/admin/products";
 import { generateUniqueSlug } from "@/lib/admin/slug";
-import { uploadProductImage } from "@/lib/admin/storage";
+import {
+  ACCEPTED_IMAGE_ACCEPT,
+  assertUploadableImage,
+  uploadProductImage,
+} from "@/lib/admin/storage";
 import type {
+  BrandRow,
   CategoryRow,
   ProductImageInput,
   SubcategoryRow,
@@ -46,6 +52,7 @@ const MAX_GALLERY_IMAGES = 10;
 
 const productSchema = z.object({
   title: z.string().min(2, "Название обязательно"),
+  brand_id: z.string(),
   brand: z.string(),
   manufacturer: z.string(),
   price: z
@@ -66,6 +73,7 @@ type ProductFormValues = z.input<typeof productSchema>;
 
 const defaultValues: ProductFormValues = {
   title: "",
+  brand_id: "",
   brand: "",
   manufacturer: "",
   price: "",
@@ -104,6 +112,7 @@ export function AdminProductFormPage() {
 
   const [categories, setCategories] = useState<CategoryRow[]>([]);
   const [subcategories, setSubcategories] = useState<SubcategoryRow[]>([]);
+  const [brands, setBrands] = useState<BrandRow[]>([]);
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [isActive, setIsActive] = useState(true);
   const [sku, setSku] = useState<string>("");
@@ -120,6 +129,7 @@ export function AdminProductFormPage() {
   // Inline-create dialogs
   const [creatingCategory, setCreatingCategory] = useState(false);
   const [creatingSubcategory, setCreatingSubcategory] = useState(false);
+  const [creatingBrand, setCreatingBrand] = useState(false);
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
@@ -150,12 +160,14 @@ export function AdminProductFormPage() {
   const canSave = isNew ? true : isDirty;
 
   const refreshDictionaries = useCallback(async () => {
-    const [categoryRows, subcategoryRows] = await Promise.all([
+    const [categoryRows, subcategoryRows, brandRows] = await Promise.all([
       listCategories(),
       listSubcategories(),
+      listBrands(),
     ]);
     setCategories(categoryRows);
     setSubcategories(subcategoryRows);
+    setBrands(brandRows);
   }, []);
 
   useEffect(() => {
@@ -173,6 +185,7 @@ export function AdminProductFormPage() {
           product.price != null ? Number(product.price).toLocaleString("ru-RU") : "";
         form.reset({
           title: product.title,
+          brand_id: product.brand_id ?? "",
           brand: product.brand,
           manufacturer: product.manufacturer,
           price: priceForForm,
@@ -241,11 +254,20 @@ export function AdminProductFormPage() {
       }
       const mainUrl = galleryPayload.find((i) => i.is_main)?.url ?? null;
 
+      // Keep the denormalised brand/manufacturer text in sync with the linked
+      // brand so the public read layer and search keep working unchanged.
+      const selectedBrand = brands.find((b) => b.id === parsed.brand_id);
+      const brandText = selectedBrand?.name ?? parsed.brand;
+      const manufacturerText = selectedBrand
+        ? selectedBrand.manufacturer || parsed.manufacturer
+        : parsed.manufacturer;
+
       const payload = {
         slug,
         title: parsed.title,
-        brand: parsed.brand,
-        manufacturer: parsed.manufacturer,
+        brand_id: parsed.brand_id || null,
+        brand: brandText,
+        manufacturer: manufacturerText,
         image_url: mainUrl,
         price: parsed.price,
         price_label: formatPriceLabel(parsed.price),
@@ -303,12 +325,12 @@ export function AdminProductFormPage() {
     try {
       const uploaded: GalleryImage[] = [];
       for (const file of filesToUpload) {
-        if (!file.type.startsWith("image/")) {
-          toast.error(`${file.name}: не изображение`);
-          continue;
-        }
-        if (file.size > 10 * 1024 * 1024) {
-          toast.error(`${file.name}: больше 10 МБ`);
+        try {
+          assertUploadableImage(file);
+        } catch (validationError) {
+          const reason =
+            validationError instanceof Error ? validationError.message : "неподдерживаемый файл";
+          toast.error(`${file.name}: ${reason}`);
           continue;
         }
         const { publicUrl } = await uploadProductImage(file, title);
@@ -420,7 +442,7 @@ export function AdminProductFormPage() {
                   <input
                     ref={imageInputRef}
                     type="file"
-                    accept="image/*"
+                    accept={ACCEPTED_IMAGE_ACCEPT}
                     multiple
                     className="sr-only"
                     onChange={handleImageUpload}
@@ -470,12 +492,52 @@ export function AdminProductFormPage() {
                     )}
                   </div>
                   <div className="space-y-1.5">
-                    <AdminLabel htmlFor="brand">Бренд</AdminLabel>
-                    <AdminInput id="brand" {...form.register("brand")} />
+                    <AdminLabel htmlFor="brand_id">Бренд</AdminLabel>
+                    <div className="flex gap-2">
+                      <select
+                        id="brand_id"
+                        className="h-10 w-full rounded-lg border border-admin-border bg-admin-surface px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        value={form.watch("brand_id")}
+                        onChange={(event) => {
+                          const id = event.target.value;
+                          form.setValue("brand_id", id, { shouldDirty: true });
+                          const brand = brands.find((b) => b.id === id);
+                          if (brand) {
+                            form.setValue("brand", brand.name, { shouldDirty: true });
+                            form.setValue("manufacturer", brand.manufacturer, {
+                              shouldDirty: true,
+                            });
+                          }
+                        }}
+                      >
+                        <option value="">— без бренда —</option>
+                        {brands.map((brand) => (
+                          <option key={brand.id} value={brand.id}>
+                            {brand.name}
+                          </option>
+                        ))}
+                      </select>
+                      <AdminButton
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        onClick={() => setCreatingBrand(true)}
+                        aria-label="Создать бренд"
+                      >
+                        <Plus className="h-4 w-4" />
+                      </AdminButton>
+                    </div>
                   </div>
                   <div className="space-y-1.5">
                     <AdminLabel htmlFor="manufacturer">Производитель</AdminLabel>
-                    <AdminInput id="manufacturer" {...form.register("manufacturer")} />
+                    <AdminInput
+                      id="manufacturer"
+                      {...form.register("manufacturer")}
+                      placeholder="Подставится из бренда"
+                    />
+                    <p className="text-[11px] text-admin-muted-fg">
+                      Заполняется автоматически из бренда. Можно поправить вручную.
+                    </p>
                   </div>
                 </div>
               </section>
@@ -691,6 +753,30 @@ export function AdminProductFormPage() {
         />
       ) : null}
 
+      {creatingBrand ? (
+        <BrandQuickCreateDialog
+          onCancel={() => setCreatingBrand(false)}
+          onCreate={async (name, manufacturer) => {
+            const slug = await generateUniqueSlug({ table: "brands", source: name });
+            const created = await createBrand({
+              slug,
+              name,
+              manufacturer,
+              logo_url: null,
+              description: "",
+              position: brands.length,
+              is_active: true,
+            });
+            await refreshDictionaries();
+            form.setValue("brand_id", created.id, { shouldDirty: true });
+            form.setValue("brand", created.name, { shouldDirty: true });
+            form.setValue("manufacturer", created.manufacturer, { shouldDirty: true });
+            setCreatingBrand(false);
+            toast.success("Бренд создан");
+          }}
+        />
+      ) : null}
+
       {creatingSubcategory && selectedCategoryId ? (
         <QuickCreateDialog
           title="Новая подкатегория"
@@ -813,6 +899,77 @@ function GalleryThumb({
 }
 
 // ---------------------------------------------------------------------------
+
+function BrandQuickCreateDialog({
+  onCancel,
+  onCreate,
+}: {
+  onCancel: () => void;
+  onCreate: (name: string, manufacturer: string) => Promise<void>;
+}) {
+  const [name, setName] = useState("");
+  const [manufacturer, setManufacturer] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  async function submit() {
+    if (name.trim().length < 2) return;
+    setSaving(true);
+    try {
+      await onCreate(name.trim(), manufacturer.trim());
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Unknown error");
+      setSaving(false);
+    }
+  }
+
+  return (
+    <DialogPrimitive.Root open onOpenChange={(next) => !next && onCancel()}>
+      <DialogPrimitive.Portal>
+        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm data-[state=open]:animate-in data-[state=open]:fade-in-0" />
+        <DialogPrimitive.Content className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-admin-border bg-admin-surface p-6 shadow-2xl data-[state=open]:animate-in data-[state=open]:zoom-in-95">
+          <DialogPrimitive.Title className="text-base font-semibold text-foreground">
+            Новый бренд
+          </DialogPrimitive.Title>
+          <div className="mt-4 space-y-3">
+            <div className="space-y-1.5">
+              <AdminLabel htmlFor="quick-brand-name">Бренд</AdminLabel>
+              <AdminInput
+                id="quick-brand-name"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                placeholder="Например, NSK"
+                autoFocus
+              />
+            </div>
+            <div className="space-y-1.5">
+              <AdminLabel htmlFor="quick-brand-mfr">Производитель</AdminLabel>
+              <AdminInput
+                id="quick-brand-mfr"
+                value={manufacturer}
+                onChange={(event) => setManufacturer(event.target.value)}
+                placeholder="Например, NSK Nakanishi Inc."
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && !saving && name.trim().length >= 2) {
+                    event.preventDefault();
+                    void submit();
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <div className="mt-6 flex justify-end gap-2">
+            <AdminButton variant="outline" onClick={onCancel} disabled={saving}>
+              Отмена
+            </AdminButton>
+            <AdminButton onClick={() => void submit()} disabled={saving || name.trim().length < 2}>
+              {saving ? "Создаём…" : "Создать"}
+            </AdminButton>
+          </div>
+        </DialogPrimitive.Content>
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
+  );
+}
 
 function QuickCreateDialog({
   title,

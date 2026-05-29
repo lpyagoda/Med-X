@@ -51,6 +51,14 @@ export function ProductOrderPanel({ product }: ProductOrderPanelProps) {
         <h1 className="text-2xl font-semibold leading-[1.1] text-foreground sm:text-3xl">
           {product.title}
         </h1>
+        {product.brand ? (
+          <BrandBadge
+            name={product.brand}
+            slug={product.brandSlug}
+            logo={product.brandLogo}
+            manufacturer={product.manufacturer}
+          />
+        ) : null}
         {product.shortDescription && (
           <p className="mt-3 text-sm text-muted" style={{ lineHeight: "1.2" }}>
             {product.shortDescription}
@@ -177,5 +185,46 @@ export function ProductOrderPanel({ product }: ProductOrderPanelProps) {
         quantity={quantity}
       />
     </div>
+  );
+}
+
+function BrandBadge({
+  name,
+  slug,
+  logo,
+  manufacturer,
+}: {
+  name: string;
+  slug?: string;
+  logo?: string | null;
+  manufacturer: string;
+}) {
+  const inner = (
+    <>
+      {logo ? (
+        <img src={logo} alt="" className="h-5 w-auto max-w-[72px] object-contain" loading="lazy" />
+      ) : null}
+      <span className="flex flex-col leading-tight">
+        <span className="text-sm font-semibold text-foreground">{name}</span>
+        {manufacturer && manufacturer !== name ? (
+          <span className="text-xs text-muted">{manufacturer}</span>
+        ) : null}
+      </span>
+    </>
+  );
+
+  const className =
+    "mt-3 inline-flex w-fit items-center gap-2.5 rounded-full border border-border/70 bg-white/80 px-3.5 py-1.5";
+
+  return slug ? (
+    <Link
+      to={`/catalog?brand=${encodeURIComponent(slug)}`}
+      className={`${className} transition hover:border-primary/45 hover:bg-white`}
+      aria-label={`Все товары бренда ${name}`}
+    >
+      {inner}
+    </Link>
+  ) : (
+    <div className={className}>{inner}</div>
   );
 }

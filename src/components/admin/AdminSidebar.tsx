@@ -4,6 +4,7 @@ import {
   FolderTree,
   Inbox,
   Package,
+  Tags,
   Upload,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -18,6 +19,7 @@ const navItems: NavItem[] = [
   { to: "/admin/products", label: "Товары", icon: Package },
   { to: "/admin/products/import", label: "Импорт Excel", icon: Upload },
   { to: "/admin/categories", label: "Категории", icon: FolderTree },
+  { to: "/admin/brands", label: "Бренды", icon: Tags },
   { to: "/admin/orders", label: "Заказы", icon: ClipboardList },
   { to: "/admin/leads", label: "Заявки", icon: Inbox },
 ];

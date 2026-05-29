@@ -9,6 +9,7 @@ import type { NavItem } from "@/types/navigation";
 const navItems: NavItem[] = [
   { label: "Главная", href: "/" },
   { label: "Каталог", href: "/catalog" },
+  { label: "Бренды", href: "/brands" },
   { label: "О компании", href: "/about" },
   { label: "Контакты", href: "/contacts" },
 ];

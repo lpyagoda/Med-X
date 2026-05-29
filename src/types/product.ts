@@ -14,6 +14,8 @@ export type Product = {
   availability?: ProductAvailability;
   availabilityLabel?: string;
   brand: string;
+  brandSlug?: string;
+  brandLogo?: string | null;
   categoryName: string;
   categorySlug: string;
   characteristics: ProductCharacteristic[];

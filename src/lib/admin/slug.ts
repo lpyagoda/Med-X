@@ -21,7 +21,7 @@ export function slugify(input: string): string {
     .slice(0, 80);
 }
 
-type Table = "categories" | "subcategories" | "products";
+type Table = "categories" | "subcategories" | "products" | "brands";
 
 type GenerateUniqueSlugArgs = {
   table: Table;
