@@ -8,6 +8,16 @@ if (!supabaseKey) {
 
 const isBrowser = typeof window !== "undefined";
 
+// supabase-js builds a RealtimeClient in its constructor, which needs a
+// WebSocket implementation. Browsers have one natively; Node < 22 does not, so
+// the SSR build polyfills globalThis.WebSocket from the `ws` package. The
+// `import.meta.env.SSR` guard is statically false in the client build, so this
+// branch — and `ws` — are dropped from the browser bundle entirely.
+if (import.meta.env.SSR && typeof globalThis.WebSocket === "undefined") {
+  const ws = (await import("ws")).default;
+  (globalThis as unknown as { WebSocket: unknown }).WebSocket = ws;
+}
+
 /**
  * supabase-js requires an absolute http(s) URL — a relative path like "/__sb__"
  * is rejected upfront.

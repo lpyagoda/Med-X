@@ -16,7 +16,9 @@ export default defineConfig({
     },
   },
   build: {
-    target: "es2020",
+    // es2022 enables top-level await (used by the SSR-only ws polyfill in
+    // lib/supabase/client.ts). Supported by all current browsers and crawlers.
+    target: "es2022",
   },
   server: {
     port: 5173,
