@@ -54,7 +54,7 @@ export function Footer() {
       <Container className="grid gap-8 py-12 sm:grid-cols-2 md:grid-cols-[1.4fr_1fr_1.4fr_1.1fr]">
         <div>
           <Link className="inline-block" to="/">
-            <img src="/SVG/logo.svg" alt="MED-IX" className="h-8 w-auto" />
+            <img src="/SVG/logo.svg" alt="МЕД-ИКС" className="h-8 w-auto" />
           </Link>
           <p className="mt-5 max-w-md text-sm leading-6 text-muted">
             Поставщик стоматологического оборудования, комплектующих и расходных

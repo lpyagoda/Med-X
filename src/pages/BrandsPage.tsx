@@ -6,9 +6,9 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 import { fetchPublicBrands } from "@/lib/public/brands";
 import type { Brand } from "@/types/brand";
 
-export function BrandsPage() {
-  const [brands, setBrands] = useState<Brand[]>([]);
-  const [loaded, setLoaded] = useState(false);
+export function BrandsPage({ initialBrands }: { initialBrands?: Brand[] } = {}) {
+  const [brands, setBrands] = useState<Brand[]>(() => initialBrands ?? []);
+  const [loaded, setLoaded] = useState(() => (initialBrands?.length ?? 0) > 0);
 
   useEffect(() => {
     let cancelled = false;

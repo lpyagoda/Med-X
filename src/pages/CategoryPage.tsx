@@ -15,16 +15,24 @@ import {
   getProducts,
 } from "@/lib/api";
 import { fetchPublicCategories } from "@/lib/public/catalogue";
-import { readCachedCategories } from "@/lib/public/catalogueCache";
 import { fetchPublicProducts } from "@/lib/public/products";
+import type { Category } from "@/types/category";
+import type { Product } from "@/types/product";
 
-export function CategoryPage() {
+export function CategoryPage({
+  initialCategories,
+  initialProducts,
+}: {
+  initialCategories?: Category[];
+  initialProducts?: Product[];
+} = {}) {
   const { category: categorySlug } = useParams<{ category: string }>();
   const [searchParams] = useSearchParams();
+  // SSR loader seeds initial state (hydration-safe); effect refreshes live.
   const [categories, setCategories] = useState(
-    () => readCachedCategories() ?? getCategories(),
+    () => initialCategories ?? getCategories(),
   );
-  const [allProducts, setAllProducts] = useState(() => getProducts());
+  const [allProducts, setAllProducts] = useState(() => initialProducts ?? getProducts());
 
   useEffect(() => {
     let cancelled = false;

@@ -12,19 +12,30 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 import { getCategories, getProducts } from "@/lib/api";
 import { getBrandSlug } from "@/lib/catalogBrands";
 import { fetchPublicCategories } from "@/lib/public/catalogue";
-import { readCachedCategories } from "@/lib/public/catalogueCache";
 import { fetchPublicProducts } from "@/lib/public/products";
 import { fetchPublicBrands } from "@/lib/public/brands";
 import type { Brand } from "@/types/brand";
+import type { Category } from "@/types/category";
+import type { Product } from "@/types/product";
 
-export function CatalogPage() {
+export function CatalogPage({
+  initialCategories,
+  initialProducts,
+  initialBrands,
+}: {
+  initialCategories?: Category[];
+  initialProducts?: Product[];
+  initialBrands?: Brand[];
+} = {}) {
   const { category: activeCategorySlug } = useParams<{ category?: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
+  // Initial state comes from the SSR loader so hydration matches the server HTML;
+  // the effect below then refreshes from the live DB for admin↔site sync.
   const [categories, setCategories] = useState(
-    () => readCachedCategories() ?? getCategories(),
+    () => initialCategories ?? getCategories(),
   );
-  const [products, setProducts] = useState(() => getProducts());
-  const [brands, setBrands] = useState<Brand[]>([]);
+  const [products, setProducts] = useState(() => initialProducts ?? getProducts());
+  const [brands, setBrands] = useState<Brand[]>(() => initialBrands ?? []);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
   const activeBrandSlug = searchParams.get("brand") ?? "";

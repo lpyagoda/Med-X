@@ -69,17 +69,28 @@ function readFromStorage(): CartItem[] {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(readFromStorage);
+  // Start empty so the SSR HTML and the first client render match (no hydration
+  // mismatch on the header badge). The real cart is loaded from storage right
+  // after mount.
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [hydrated, setHydrated] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    setItems(readFromStorage());
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    // Don't persist until we've loaded the stored cart, otherwise the initial
+    // empty state would clobber it before hydration completes.
+    if (!hydrated || typeof window === "undefined") return;
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
     } catch {
       // Storage may be full or blocked — ignore, cart will just be ephemeral.
     }
-  }, [items]);
+  }, [items, hydrated]);
 
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => setIsOpen(false), []);
